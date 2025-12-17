@@ -14,6 +14,7 @@ import { join } from 'path';
 import { AdminAuthModule } from './admin-auth/admin-auth.module';
 import { NotificationsModules } from './notifications/notifications.module';
 import { PagesModule } from './pages/pages.module';
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PagesModule } from './pages/pages.module';
     AdminAuthModule,
     NotificationsModules,
     PagesModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],

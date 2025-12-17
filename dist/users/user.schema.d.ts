@@ -5,9 +5,9 @@ export declare class User extends Document {
     dob: Date;
     socialId: string;
     device_type?: string;
+    isSubscriptionActive?: boolean;
     device_token?: string;
     password: string;
-    qrCode: string;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, Document<unknown, any, User, any, {}> & User & Required<{
     _id: import("mongoose").Types.ObjectId;

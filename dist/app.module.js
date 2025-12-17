@@ -26,6 +26,7 @@ const path_1 = require("path");
 const admin_auth_module_1 = require("./admin-auth/admin-auth.module");
 const notifications_module_1 = require("./notifications/notifications.module");
 const pages_module_1 = require("./pages/pages.module");
+const event_module_1 = require("./event/event.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -53,6 +54,7 @@ exports.AppModule = AppModule = __decorate([
             admin_auth_module_1.AdminAuthModule,
             notifications_module_1.NotificationsModules,
             pages_module_1.PagesModule,
+            event_module_1.EventModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, chat_gateway_1.ChatGateway],

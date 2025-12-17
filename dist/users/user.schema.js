@@ -40,6 +40,10 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "device_type", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ default: false }),
+    __metadata("design:type", Boolean)
+], User.prototype, "isSubscriptionActive", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ required: false }),
     __metadata("design:type", String)
 ], User.prototype, "device_token", void 0);
@@ -47,10 +51,6 @@ __decorate([
     (0, mongoose_1.Prop)({ required: false }),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ required: false }),
-    __metadata("design:type", String)
-], User.prototype, "qrCode", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], User);

@@ -22,14 +22,14 @@ export class User extends Document {
   @Prop({ required: false })
   device_type?: string;
 
+  @Prop({default:false})
+  isSubscriptionActive?: boolean;
+
   @Prop({ required: false })
   device_token?: string;
 
   @Prop({ required: false })
   password: string;
-  
-  @Prop({ required: false })
-  qrCode: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

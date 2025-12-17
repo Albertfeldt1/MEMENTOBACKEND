@@ -20,9 +20,18 @@ const social_login_dto_1 = require("./dto/social-login.dto");
 const platform_express_1 = require("@nestjs/platform-express");
 const upload_helper_1 = require("../helper/upload.helper");
 const edit_profile_dto_1 = require("./dto/edit-profile.dto");
+const register_profile_dto_1 = require("./dto/register-profile.dto");
+const login_dto_1 = require("./dto/login.dto");
+const check_email_dto_1 = require("./dto/check-email.dto");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
+    }
+    async register(body) {
+        return this.usersService.register(body);
+    }
+    async login(body) {
+        return this.usersService.login(body);
     }
     async socialLogin(body) {
         return this.usersService.socialLogin(body);
@@ -31,12 +40,12 @@ let UsersController = class UsersController {
         if (!file) {
             return {
                 statusCode: common_1.HttpStatus.BAD_REQUEST,
-                message: 'No file uploaded',
+                message: "No file uploaded",
             };
         }
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: 'File uploaded successfully',
+            message: "File uploaded successfully",
             data: {
                 fileName: file.filename,
                 path: `/uploads/${file.filename}`,
@@ -51,6 +60,9 @@ let UsersController = class UsersController {
         const userId = req.user.userId;
         return this.usersService.logout(userId);
     }
+    async checkEmail(body) {
+        return this.usersService.checkEmail(body);
+    }
     async getProfile(req) {
         const userId = req.user.userId;
         return this.usersService.getProfile(userId);
@@ -58,22 +70,37 @@ let UsersController = class UsersController {
 };
 exports.UsersController = UsersController;
 __decorate([
-    (0, common_1.Post)('social-login'),
+    (0, common_1.Post)("register"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [register_profile_dto_1.RegisterDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "register", null);
+__decorate([
+    (0, common_1.Post)("login"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [login_dto_1.LoginDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)("social-login"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [social_login_dto_1.SocialLoginDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "socialLogin", null);
 __decorate([
-    (0, common_1.Post)('upload-image'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file', upload_helper_1.imageUploadHelper)),
+    (0, common_1.Post)("upload-image"),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)("file", upload_helper_1.imageUploadHelper)),
     __param(0, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "uploadImage", null);
 __decorate([
-    (0, common_1.Put)('edit-profile'),
+    (0, common_1.Put)("edit-profile"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Body)()),
@@ -82,7 +109,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "editProfile", null);
 __decorate([
-    (0, common_1.Post)('logout'),
+    (0, common_1.Post)("logout"),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
@@ -90,15 +117,23 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "logout", null);
 __decorate([
+    (0, common_1.Post)("check-email"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [check_email_dto_1.CheckEmailDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "checkEmail", null);
+__decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('profile'),
+    (0, common_1.Get)("profile"),
     __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getProfile", null);
 exports.UsersController = UsersController = __decorate([
-    (0, common_1.Controller)('users'),
+    (0, common_1.Controller)("users"),
     __metadata("design:paramtypes", [users_service_1.UsersService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map
