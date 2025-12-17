@@ -20,18 +20,10 @@ const social_login_dto_1 = require("./dto/social-login.dto");
 const platform_express_1 = require("@nestjs/platform-express");
 const upload_helper_1 = require("../helper/upload.helper");
 const edit_profile_dto_1 = require("./dto/edit-profile.dto");
-const register_profile_dto_1 = require("./dto/register-profile.dto");
-const login_dto_1 = require("./dto/login.dto");
 const check_email_dto_1 = require("./dto/check-email.dto");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
-    }
-    async register(body) {
-        return this.usersService.register(body);
-    }
-    async login(body) {
-        return this.usersService.login(body);
     }
     async socialLogin(body) {
         return this.usersService.socialLogin(body);
@@ -69,21 +61,6 @@ let UsersController = class UsersController {
     }
 };
 exports.UsersController = UsersController;
-__decorate([
-    (0, common_1.Post)("register"),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [register_profile_dto_1.RegisterDto]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "register", null);
-__decorate([
-    (0, common_1.Post)("login"),
-    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [login_dto_1.LoginDto]),
-    __metadata("design:returntype", Promise)
-], UsersController.prototype, "login", null);
 __decorate([
     (0, common_1.Post)("social-login"),
     __param(0, (0, common_1.Body)()),

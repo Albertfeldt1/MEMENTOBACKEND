@@ -27,17 +27,6 @@ import { CheckEmailDto } from "./dto/check-email.dto";
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Post("register")
-  async register(@Body() body: RegisterDto) {
-    return this.usersService.register(body);
-  }
-
-  @Post("login")
-  @HttpCode(HttpStatus.OK)
-  async login(@Body() body: LoginDto) {
-    return this.usersService.login(body);
-  }
-
   @Post("social-login")
   async socialLogin(@Body() body: SocialLoginDto) {
     return this.usersService.socialLogin(body);
@@ -59,6 +48,17 @@ export class UsersController {
         path: `/uploads/${file.filename}`,
       },
     };
+  }
+
+    @Post("register")
+  async register(@Body() body: RegisterDto) {
+    return this.usersService.register(body);
+  }
+
+  @Post("login")
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() body: LoginDto) {
+    return this.usersService.login(body);
   }
 
   @Put("edit-profile")
