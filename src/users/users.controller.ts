@@ -50,7 +50,7 @@ export class UsersController {
     };
   }
 
-    @Post("register")
+  @Post("register")
   async register(@Body() body: RegisterDto) {
     return this.usersService.register(body);
   }
@@ -64,14 +64,14 @@ export class UsersController {
   @Put("edit-profile")
   @UseGuards(JwtAuthGuard)
   async editProfile(@Request() req, @Body() body: EditProfileDto) {
-    const userId = req.user.userId; 
+    const userId = req.user.userId;
     return this.usersService.editProfile(userId, body);
   }
 
   @Post("logout")
   @UseGuards(JwtAuthGuard)
   async logout(@Request() req) {
-    const userId = req.user.userId; 
+    const userId = req.user.userId;
     return this.usersService.logout(userId);
   }
 
