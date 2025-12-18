@@ -17,18 +17,19 @@ const common_1 = require("@nestjs/common");
 const event_service_1 = require("./event.service");
 const create_event_dto_1 = require("./dto/create-event.dto");
 const update_event_dto_1 = require("./dto/update-event.dto");
+const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 let EventController = class EventController {
     constructor(eventService) {
         this.eventService = eventService;
     }
-    create(dto) {
-        return this.eventService.create(dto);
+    create(req, dto) {
+        return this.eventService.create(req.user.userId, dto);
     }
-    findAll() {
-        return this.eventService.findAll();
+    findAll(req) {
+        return this.eventService.findAll(req.user.userId);
     }
-    findById(id) {
-        return this.eventService.findById(id);
+    findById(req, id) {
+        return this.eventService.findById(req.user.userId, id);
     }
     update(id, dto) {
         return this.eventService.update(id, dto);
@@ -39,23 +40,29 @@ let EventController = class EventController {
 };
 exports.EventController = EventController;
 __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_event_dto_1.CreateEventDto]),
+    __metadata("design:paramtypes", [Object, create_event_dto_1.CreateEventDto]),
     __metadata("design:returntype", void 0)
 ], EventController.prototype, "create", null);
 __decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], EventController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Get)('get-event-details'),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Query)('id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", void 0)
 ], EventController.prototype, "findById", null);
 __decorate([

@@ -10,6 +10,7 @@ import {
   Put,
   HttpStatus,
   HttpCode,
+  Patch,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
@@ -79,6 +80,21 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async checkEmail(@Body() body: CheckEmailDto) {
     return this.usersService.checkEmail(body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch("toggle-notification")
+  async toggleNotificationUser(@Request() req: any) {
+    const user = await this.usersService.toggleNotificationUser(
+      req.user.userId
+    );
+    return {
+      statusCode: 200,
+      message: user.isNotification
+        ? "Notifications have been enabled successfully."
+        : "Notifications have been disabled successfully.",
+      data: user,
+    };
   }
 
   @UseGuards(JwtAuthGuard)

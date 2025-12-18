@@ -70,11 +70,11 @@ let UsersService = class UsersService {
             const payload = {
                 sub: user._id,
                 email: user.email,
-                loginType: 'social',
+                loginType: "social",
             };
             return (0, response_helper_1.handleSuccess)({
                 statusCode: common_1.HttpStatus.OK,
-                message: 'Login successful.',
+                message: "Login successful.",
                 data: {
                     token: this.jwtService.sign(payload),
                     user,
@@ -96,11 +96,11 @@ let UsersService = class UsersService {
                 const payload = {
                     sub: user._id,
                     email: user.email,
-                    loginType: 'social',
+                    loginType: "social",
                 };
                 return (0, response_helper_1.handleSuccess)({
                     statusCode: common_1.HttpStatus.OK,
-                    message: 'Social account linked successfully.',
+                    message: "Social account linked successfully.",
                     data: {
                         token: this.jwtService.sign(payload),
                         user,
@@ -109,8 +109,8 @@ let UsersService = class UsersService {
             }
         }
         user = await this.userModel.create({
-            name: name ?? '',
-            email: email?.toLowerCase() ?? '',
+            name: name ?? "",
+            email: email?.toLowerCase() ?? "",
             socialId,
             device_type,
             device_token,
@@ -118,11 +118,11 @@ let UsersService = class UsersService {
         const payload = {
             sub: user._id,
             email: user.email,
-            loginType: 'social',
+            loginType: "social",
         };
         return (0, response_helper_1.handleSuccess)({
             statusCode: common_1.HttpStatus.CREATED,
-            message: 'Account created using social login.',
+            message: "Account created using social login.",
             data: {
                 token: this.jwtService.sign(payload),
                 user,
@@ -205,7 +205,7 @@ let UsersService = class UsersService {
             .select("-password -__v")
             .lean();
         if (!user) {
-            throw new common_1.NotFoundException("User not found");
+            throw new common_1.NotFoundException("The requested user does not exist.");
         }
         return {
             statusCode: common_1.HttpStatus.OK,
@@ -216,7 +216,7 @@ let UsersService = class UsersService {
     async editProfile(userId, body) {
         const user = await this.userModel.findById(userId);
         if (!user) {
-            throw new common_1.NotFoundException("User not found");
+            throw new common_1.NotFoundException("The requested user does not exist.");
         }
         if (body?.name)
             user.name = body.name;
@@ -235,10 +235,19 @@ let UsersService = class UsersService {
             data: user,
         };
     }
+    async toggleNotificationUser(userId) {
+        const user = await this.userModel.findById(userId);
+        if (!user) {
+            throw new common_1.NotFoundException("The requested user does not exist.");
+        }
+        user.isNotification = !user.isNotification;
+        await user.save();
+        return user;
+    }
     async logout(userId) {
         const user = await this.userModel.findById(userId);
         if (!user) {
-            throw new common_1.NotFoundException("User not found");
+            throw new common_1.NotFoundException("The requested user does not exist.");
         }
         user.device_token = "";
         await user.save();

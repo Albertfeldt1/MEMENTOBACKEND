@@ -73,6 +73,7 @@ export declare class UsersService {
             __v: number;
         };
     }>;
+    toggleNotificationUser(userId: string): Promise<User>;
     logout(userId: string): Promise<{
         statusCode: HttpStatus;
         message: string;

@@ -28,94 +28,93 @@ export class UsersService {
     private jwtService: JwtService,
     private notificationsService: NotificationsService
   ) {}
-async socialLogin(body: SocialLoginDto) {
-  const { socialId, email, name, device_type, device_token } = body;
+  async socialLogin(body: SocialLoginDto) {
+    const { socialId, email, name, device_type, device_token } = body;
 
-  // 1️⃣ Check by socialId (already linked)
-  let user = await this.userModel.findOne({ socialId });
-
-  if (user) {
-    user.device_type = device_type ?? user.device_type;
-    user.device_token = device_token ?? user.device_token;
-    await user.save();
-
-    const payload = {
-      sub: user._id,
-      email: user.email,
-      loginType: 'social',
-    };
-
-    return handleSuccess({
-      statusCode: HttpStatus.OK,
-      message: 'Login successful.',
-      data: {
-        token: this.jwtService.sign(payload),
-        user,
-      },
-    });
-  }
-
-  // 2️⃣ Check by email (link account)
-  if (email) {
-    user = await this.userModel.findOne({
-      email: email.toLowerCase(),
-    });
+    // 1️⃣ Check by socialId (already linked)
+    let user = await this.userModel.findOne({ socialId });
 
     if (user) {
-      // 🔗 Link social account
-      user.socialId = socialId;
       user.device_type = device_type ?? user.device_type;
       user.device_token = device_token ?? user.device_token;
-
-      // Optional: update name only if empty
-      if (!user.name && name) {
-        user.name = name;
-      }
-
       await user.save();
 
       const payload = {
         sub: user._id,
         email: user.email,
-        loginType: 'social',
+        loginType: "social",
       };
 
       return handleSuccess({
         statusCode: HttpStatus.OK,
-        message: 'Social account linked successfully.',
+        message: "Login successful.",
         data: {
           token: this.jwtService.sign(payload),
           user,
         },
       });
     }
+
+    // 2️⃣ Check by email (link account)
+    if (email) {
+      user = await this.userModel.findOne({
+        email: email.toLowerCase(),
+      });
+
+      if (user) {
+        // 🔗 Link social account
+        user.socialId = socialId;
+        user.device_type = device_type ?? user.device_type;
+        user.device_token = device_token ?? user.device_token;
+
+        // Optional: update name only if empty
+        if (!user.name && name) {
+          user.name = name;
+        }
+
+        await user.save();
+
+        const payload = {
+          sub: user._id,
+          email: user.email,
+          loginType: "social",
+        };
+
+        return handleSuccess({
+          statusCode: HttpStatus.OK,
+          message: "Social account linked successfully.",
+          data: {
+            token: this.jwtService.sign(payload),
+            user,
+          },
+        });
+      }
+    }
+
+    // 3️⃣ Create new user (fresh social signup)
+    user = await this.userModel.create({
+      name: name ?? "",
+      email: email?.toLowerCase() ?? "",
+      socialId,
+      device_type,
+      device_token,
+    });
+
+    const payload = {
+      sub: user._id,
+      email: user.email,
+      loginType: "social",
+    };
+
+    return handleSuccess({
+      statusCode: HttpStatus.CREATED,
+      message: "Account created using social login.",
+      data: {
+        token: this.jwtService.sign(payload),
+        user,
+      },
+    });
   }
-
-  // 3️⃣ Create new user (fresh social signup)
-  user = await this.userModel.create({
-    name: name ?? '',
-    email: email?.toLowerCase() ?? '',
-    socialId,
-    device_type,
-    device_token,
-  });
-
-  const payload = {
-    sub: user._id,
-    email: user.email,
-    loginType: 'social',
-  };
-
-  return handleSuccess({
-    statusCode: HttpStatus.CREATED,
-    message: 'Account created using social login.',
-    data: {
-      token: this.jwtService.sign(payload),
-      user,
-    },
-  });
-}
-
 
   async register(body: RegisterDto) {
     const { email, password, name, device_type, device_token } = body;
@@ -195,8 +194,8 @@ async socialLogin(body: SocialLoginDto) {
     const email = body.email.toLowerCase();
     const user = await this.userModel.findOne({ email }).select("_id");
     return {
-      statusCode:200,
-      message:"Data fetched successfully",
+      statusCode: 200,
+      message: "Data fetched successfully",
       exists: !!user,
     };
   }
@@ -211,7 +210,7 @@ async socialLogin(body: SocialLoginDto) {
       .lean();
 
     if (!user) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException("The requested user does not exist.");
     }
 
     return {
@@ -220,10 +219,11 @@ async socialLogin(body: SocialLoginDto) {
       data: { user },
     };
   }
+
   async editProfile(userId: string, body: any) {
     const user = await this.userModel.findById(userId);
     if (!user) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException("The requested user does not exist.");
     }
     if (body?.name) user.name = body.name;
     if (body?.email) user.email = body.email.toLowerCase();
@@ -239,10 +239,21 @@ async socialLogin(body: SocialLoginDto) {
     };
   }
 
+  async toggleNotificationUser(userId: string): Promise<User> {
+    const user = await this.userModel.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException("The requested user does not exist.");
+    }
+    user.isNotification = !user.isNotification;
+    await user.save();
+    return user;
+  }
+
   async logout(userId: string) {
     const user = await this.userModel.findById(userId);
     if (!user) {
-      throw new NotFoundException("User not found");
+      throw new NotFoundException("The requested user does not exist.");
     }
 
     // Clear device token

@@ -63,6 +63,16 @@ let UsersController = class UsersController {
     async checkEmail(body) {
         return this.usersService.checkEmail(body);
     }
+    async toggleNotificationUser(req) {
+        const user = await this.usersService.toggleNotificationUser(req.user.userId);
+        return {
+            statusCode: 200,
+            message: user.isNotification
+                ? "Notifications have been enabled successfully."
+                : "Notifications have been disabled successfully.",
+            data: user,
+        };
+    }
     async getProfile(req) {
         const userId = req.user.userId;
         return this.usersService.getProfile(userId);
@@ -124,6 +134,14 @@ __decorate([
     __metadata("design:paramtypes", [check_email_dto_1.CheckEmailDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "checkEmail", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Patch)("toggle-notification"),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "toggleNotificationUser", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, common_1.Get)("profile"),

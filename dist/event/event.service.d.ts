@@ -1,27 +1,40 @@
-import { Model } from 'mongoose';
-import { Event, EventDocument } from './entities/event.entity';
-import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
+import { HttpStatus } from "@nestjs/common";
+import { Model, Types } from "mongoose";
+import { Event, EventDocument } from "./entities/event.entity";
+import { CreateEventDto } from "./dto/create-event.dto";
+import { UpdateEventDto } from "./dto/update-event.dto";
 export declare class EventService {
     private eventModel;
     constructor(eventModel: Model<EventDocument>);
-    create(dto: CreateEventDto): Promise<import("mongoose").Document<unknown, {}, EventDocument, {}, {}> & Event & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }> & {
-        __v: number;
+    create(userId: string, dto: CreateEventDto): Promise<{
+        statusCode: HttpStatus;
+        message: string;
+        data: import("mongoose").Document<unknown, {}, EventDocument, {}, {}> & Event & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+            _id: Types.ObjectId;
+        }> & {
+            __v: number;
+        };
     }>;
-    findAll(): Promise<(import("mongoose").Document<unknown, {}, EventDocument, {}, {}> & Event & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }> & {
-        __v: number;
-    })[]>;
-    findById(id: string): Promise<import("mongoose").Document<unknown, {}, EventDocument, {}, {}> & Event & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }> & {
-        __v: number;
+    findAll(userId: string): Promise<{
+        statusCode: HttpStatus;
+        message: string;
+        data: (import("mongoose").Document<unknown, {}, EventDocument, {}, {}> & Event & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+            _id: Types.ObjectId;
+        }> & {
+            __v: number;
+        })[];
     }>;
-    update(id: string, dto: UpdateEventDto): Promise<import("mongoose").Document<unknown, {}, EventDocument, {}, {}> & Event & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
-        _id: import("mongoose").Types.ObjectId;
+    findById(userId: string, eventId: string): Promise<{
+        statusCode: HttpStatus;
+        message: string;
+        data: import("mongoose").Document<unknown, {}, EventDocument, {}, {}> & Event & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+            _id: Types.ObjectId;
+        }> & {
+            __v: number;
+        };
+    }>;
+    update(id: string, dto: UpdateEventDto): Promise<import("mongoose").Document<unknown, {}, EventDocument, {}, {}> & Event & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+        _id: Types.ObjectId;
     }> & {
         __v: number;
     }>;

@@ -75,6 +75,11 @@ export declare class UsersController {
         message: string;
         exists: boolean;
     }>;
+    toggleNotificationUser(req: any): Promise<{
+        statusCode: number;
+        message: string;
+        data: import("./user.schema").User;
+    }>;
     getProfile(req: any): Promise<{
         statusCode: HttpStatus;
         message: string;

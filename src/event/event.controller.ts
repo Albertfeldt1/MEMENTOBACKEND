@@ -6,31 +6,37 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
+  Request,
+  Query,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('events')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
   
-  // CREATE
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() dto: CreateEventDto) {
-    return this.eventService.create(dto);
+  create(@Request() req,@Body() dto: CreateEventDto) {
+      return this.eventService.create(req.user.userId,dto);
   }
 
   // GET ALL
+  @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
-    return this.eventService.findAll();
+  findAll(@Request() req) {
+    return this.eventService.findAll(req.user.userId);
   }
 
   // GET BY ID
-  @Get(':id')
-  findById(@Param('id') id: string) {
-    return this.eventService.findById(id);
+  @UseGuards(JwtAuthGuard)
+  @Get('get-event-details')
+  findById(@Request() req,@Query('id') id: string) {
+    return this.eventService.findById(req.user.userId,id);
   }
 
   // UPDATE

@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document } from "mongoose";
 export declare class User extends Document {
     name: string;
     email: string;
@@ -8,6 +8,7 @@ export declare class User extends Document {
     isSubscriptionActive?: boolean;
     device_token?: string;
     password: string;
+    isNotification: boolean;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, Document<unknown, any, User, any, {}> & User & Required<{
     _id: import("mongoose").Types.ObjectId;

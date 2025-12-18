@@ -21,32 +21,60 @@ let EventService = class EventService {
     constructor(eventModel) {
         this.eventModel = eventModel;
     }
-    async create(dto) {
-        return this.eventModel.create({
+    async create(userId, dto) {
+        const data = await this.eventModel.create({
+            userId: new mongoose_2.Types.ObjectId(userId),
             ...dto,
             date: new Date(dto.date),
         });
+        const response = {
+            statusCode: common_1.HttpStatus.OK,
+            message: "Event created successfully",
+            data,
+        };
+        return response;
     }
-    async findAll() {
-        return this.eventModel.find().sort({ createdAt: -1 });
+    async findAll(userId) {
+        const data = await this.eventModel
+            .find({ userId: new mongoose_2.Types.ObjectId(userId) })
+            .populate("userId", "-password")
+            .sort({ createdAt: -1 });
+        const response = {
+            statusCode: common_1.HttpStatus.OK,
+            message: "All events fetched successfully",
+            data,
+        };
+        return response;
     }
-    async findById(id) {
-        const event = await this.eventModel.findById(id);
-        if (!event)
-            throw new common_1.NotFoundException('Event not found');
-        return event;
+    async findById(userId, eventId) {
+        const event = await this.eventModel
+            .findOne({
+            _id: new mongoose_2.Types.ObjectId(eventId),
+            userId: new mongoose_2.Types.ObjectId(userId),
+        })
+            .populate("userId", "-password");
+        if (!event) {
+            throw new common_1.NotFoundException("Event not found");
+        }
+        return {
+            statusCode: common_1.HttpStatus.OK,
+            message: "Event details fetched successfully",
+            data: event,
+        };
     }
     async update(id, dto) {
-        const event = await this.eventModel.findByIdAndUpdate(id, dto, { new: true });
+        const event = await this.eventModel.findByIdAndUpdate(id, dto, {
+            new: true,
+        });
         if (!event)
-            throw new common_1.NotFoundException('Event not found');
+            throw new common_1.NotFoundException("Event not found");
         return event;
     }
     async delete(id) {
         const event = await this.eventModel.findByIdAndDelete(id);
         if (!event)
-            throw new common_1.NotFoundException('Event not found');
-        return { message: 'Event deleted successfully' };
+            throw new common_1.NotFoundException("Event not found");
+        return { message: "Event deleted successfully" };
     }
 };
 exports.EventService = EventService;
