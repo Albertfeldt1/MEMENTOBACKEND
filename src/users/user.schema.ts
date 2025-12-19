@@ -31,6 +31,9 @@ export class User extends Document {
   @Prop({ required: false })
   password: string;
 
+  @Prop({ required: false })
+  image: string;
+
   @Prop({ default: true })
   isNotification: boolean;
 }
