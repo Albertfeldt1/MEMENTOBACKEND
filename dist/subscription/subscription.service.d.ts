@@ -1,9 +1,54 @@
-import { CreateSubscriptionDto } from './dto/create-subscription.dto';
-import { UpdateSubscriptionDto } from './dto/update-subscription.dto';
+import { Model, Types } from "mongoose";
+import { Subscription, SubscriptionDocument } from "./entities/subscription.entity";
+import { CreateSubscriptionDto } from "./dto/create-subscription.dto";
+import { UpdateSubscriptionDto } from "./dto/update-subscription.dto";
 export declare class SubscriptionService {
-    create(createSubscriptionDto: CreateSubscriptionDto): string;
-    findAll(): string;
-    findOne(id: number): string;
-    update(id: number, updateSubscriptionDto: UpdateSubscriptionDto): string;
-    remove(id: number): string;
+    private readonly subscriptionModel;
+    constructor(subscriptionModel: Model<SubscriptionDocument>);
+    insertManySubscriptions(): Promise<{
+        message: string;
+        existingPlans: string[];
+        count?: undefined;
+        data?: undefined;
+    } | {
+        message: string;
+        count: number;
+        data: import("mongoose").MergeType<import("mongoose").Document<unknown, {}, SubscriptionDocument, {}, {}> & Subscription & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+            _id: Types.ObjectId;
+        }> & {
+            __v: number;
+        }, Omit<{
+            planName: string;
+            price: number;
+            billingCycle: string;
+            features: string[];
+            isActive: boolean;
+        }, "_id">>[];
+        existingPlans?: undefined;
+    }>;
+    create(createSubscriptionDto: CreateSubscriptionDto): Promise<import("mongoose").Document<unknown, {}, SubscriptionDocument, {}, {}> & Subscription & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+        _id: Types.ObjectId;
+    }> & {
+        __v: number;
+    }>;
+    findAll(): Promise<(import("mongoose").Document<unknown, {}, SubscriptionDocument, {}, {}> & Subscription & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+        _id: Types.ObjectId;
+    }> & {
+        __v: number;
+    })[]>;
+    findOne(id: string): Promise<import("mongoose").Document<unknown, {}, SubscriptionDocument, {}, {}> & Subscription & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+        _id: Types.ObjectId;
+    }> & {
+        __v: number;
+    }>;
+    update(id: string, updateSubscriptionDto: UpdateSubscriptionDto): Promise<import("mongoose").Document<unknown, {}, SubscriptionDocument, {}, {}> & Subscription & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+        _id: Types.ObjectId;
+    }> & {
+        __v: number;
+    }>;
+    remove(id: string, userId: string): Promise<import("mongoose").Document<unknown, {}, SubscriptionDocument, {}, {}> & Subscription & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+        _id: Types.ObjectId;
+    }> & {
+        __v: number;
+    }>;
 }

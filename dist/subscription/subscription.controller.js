@@ -21,60 +21,104 @@ let SubscriptionController = class SubscriptionController {
     constructor(subscriptionService) {
         this.subscriptionService = subscriptionService;
     }
-    create(createSubscriptionDto) {
-        return this.subscriptionService.create(createSubscriptionDto);
+    async seedSubscriptions() {
+        const result = await this.subscriptionService.insertManySubscriptions();
+        return {
+            statusCode: 201,
+            message: result.message,
+            data: result,
+        };
     }
-    findAll() {
-        return this.subscriptionService.findAll();
+    async create(req, createSubscriptionDto) {
+        const data = await this.subscriptionService.create(createSubscriptionDto);
+        return {
+            statusCode: 201,
+            message: "Subscription created successfully",
+            data,
+        };
     }
-    findOne(id) {
-        return this.subscriptionService.findOne(+id);
+    async findAll(req) {
+        const data = await this.subscriptionService.findAll();
+        return {
+            statusCode: 200,
+            message: "Subscriptions fetched successfully",
+            data,
+        };
     }
-    update(id, updateSubscriptionDto) {
-        return this.subscriptionService.update(+id, updateSubscriptionDto);
+    async findOne(req, id) {
+        const data = await this.subscriptionService.findOne(id);
+        return {
+            statusCode: 200,
+            message: "Subscription fetched successfully",
+            data,
+        };
     }
-    remove(id) {
-        return this.subscriptionService.remove(+id);
+    async update(req, id, updateSubscriptionDto) {
+        const data = await this.subscriptionService.update(id, updateSubscriptionDto);
+        return {
+            statusCode: 200,
+            message: "Subscription updated successfully",
+            data,
+        };
+    }
+    async remove(req, id) {
+        const data = await this.subscriptionService.remove(id, req.user.userId);
+        return {
+            statusCode: 200,
+            message: "Subscription deleted successfully",
+            data,
+        };
     }
 };
 exports.SubscriptionController = SubscriptionController;
 __decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Post)("seed"),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_subscription_dto_1.CreateSubscriptionDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], SubscriptionController.prototype, "seedSubscriptions", null);
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, create_subscription_dto_1.CreateSubscriptionDto]),
+    __metadata("design:returntype", Promise)
 ], SubscriptionController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
 ], SubscriptionController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Get)(":id"),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
 ], SubscriptionController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
+    (0, common_1.Patch)(":id"),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Param)("id")),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_subscription_dto_1.UpdateSubscriptionDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object, String, update_subscription_dto_1.UpdateSubscriptionDto]),
+    __metadata("design:returntype", Promise)
 ], SubscriptionController.prototype, "update", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Delete)(":id"),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
 ], SubscriptionController.prototype, "remove", null);
 exports.SubscriptionController = SubscriptionController = __decorate([
-    (0, common_1.Controller)('subscription'),
+    (0, common_1.Controller)("subscription"),
     __metadata("design:paramtypes", [subscription_service_1.SubscriptionService])
 ], SubscriptionController);
 //# sourceMappingURL=subscription.controller.js.map

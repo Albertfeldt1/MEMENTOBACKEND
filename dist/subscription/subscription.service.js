@@ -5,28 +5,123 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SubscriptionService = void 0;
 const common_1 = require("@nestjs/common");
+const mongoose_1 = require("@nestjs/mongoose");
+const mongoose_2 = require("mongoose");
+const subscription_entity_1 = require("./entities/subscription.entity");
 let SubscriptionService = class SubscriptionService {
-    create(createSubscriptionDto) {
-        return 'This action adds a new subscription';
+    constructor(subscriptionModel) {
+        this.subscriptionModel = subscriptionModel;
     }
-    findAll() {
-        return `This action returns all subscription`;
+    async insertManySubscriptions() {
+        const plans = [
+            {
+                planName: "Basic",
+                price: 99.99,
+                billingCycle: "yearly",
+                features: [
+                    "Up to 5 photo albums",
+                    "100 photos per album",
+                    "Basic editing tools",
+                    "Standard quality prints",
+                    "Email support",
+                ],
+                isActive: true,
+            },
+            {
+                planName: "Premium",
+                price: 199.99,
+                billingCycle: "yearly",
+                features: [
+                    "Unlimited photo albums",
+                    "500 photos per album",
+                    "Advanced editing tools",
+                    "High quality prints",
+                    "Priority support",
+                    "Cloud backup",
+                ],
+                isActive: true,
+            },
+            {
+                planName: "Pro",
+                price: 299.99,
+                billingCycle: "yearly",
+                features: [
+                    "Everything in Premium",
+                    "Unlimited photos per album",
+                    "Professional editing suite",
+                    "Premium quality prints",
+                    "24/7 dedicated support",
+                    "Collaboration features",
+                    "Custom branding",
+                ],
+                isActive: true,
+            },
+        ];
+        const existing = await this.subscriptionModel.find({
+            planName: { $in: plans.map((p) => p.planName) },
+        });
+        if (existing.length) {
+            return {
+                message: "Plans already exist",
+                existingPlans: existing.map((p) => p.planName),
+            };
+        }
+        const data = await this.subscriptionModel.insertMany(plans);
+        return {
+            message: "Subscription plans inserted successfully",
+            count: data.length,
+            data,
+        };
     }
-    findOne(id) {
-        return `This action returns a #${id} subscription`;
+    async create(createSubscriptionDto) {
+        const subscription = await this.subscriptionModel.create({
+            ...createSubscriptionDto,
+        });
+        return subscription;
     }
-    update(id, updateSubscriptionDto) {
-        return `This action updates a #${id} subscription`;
+    async findAll() {
+        return this.subscriptionModel.find({}).sort({ createdAt: -1 });
     }
-    remove(id) {
-        return `This action removes a #${id} subscription`;
+    async findOne(id) {
+        const subscription = await this.subscriptionModel.findOne({
+            _id: id,
+        });
+        if (!subscription) {
+            throw new common_1.NotFoundException("Subscription not found");
+        }
+        return subscription;
+    }
+    async update(id, updateSubscriptionDto) {
+        const subscription = await this.subscriptionModel.findOneAndUpdate({ _id: id }, updateSubscriptionDto, { new: true });
+        if (!subscription) {
+            throw new common_1.NotFoundException("Subscription not found");
+        }
+        return subscription;
+    }
+    async remove(id, userId) {
+        const subscription = await this.subscriptionModel.findOneAndDelete({
+            _id: id,
+            userId,
+        });
+        if (!subscription) {
+            throw new common_1.NotFoundException("Subscription not found");
+        }
+        return subscription;
     }
 };
 exports.SubscriptionService = SubscriptionService;
 exports.SubscriptionService = SubscriptionService = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __param(0, (0, mongoose_1.InjectModel)(subscription_entity_1.Subscription.name)),
+    __metadata("design:paramtypes", [mongoose_2.Model])
 ], SubscriptionService);
 //# sourceMappingURL=subscription.service.js.map
