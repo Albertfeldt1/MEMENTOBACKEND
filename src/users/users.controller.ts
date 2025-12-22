@@ -11,6 +11,7 @@ import {
   HttpStatus,
   HttpCode,
   Patch,
+  Query,
 } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
@@ -27,6 +28,17 @@ import { CheckEmailDto } from "./dto/check-email.dto";
 @Controller("users")
 export class UsersController {
   constructor(private usersService: UsersService) {}
+
+  @Get('get-all-users')
+  async getAllUsers(
+    @Query("page") page = 1,
+    @Query("limit") limit = 10,
+  ) {
+    return this.usersService.getAllUsers(
+      Number(page),
+      Number(limit),
+    );
+  }
 
   @Post("social-login")
   async socialLogin(@Body() body: SocialLoginDto) {
@@ -104,4 +116,5 @@ export class UsersController {
     const userId = req.user.userId;
     return this.usersService.getProfile(userId);
   }
+
 }

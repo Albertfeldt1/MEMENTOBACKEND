@@ -10,6 +10,7 @@ export declare class User extends Document {
     password: string;
     image: string;
     isNotification: boolean;
+    isDeleted: boolean;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, Document<unknown, any, User, any, {}> & User & Required<{
     _id: import("mongoose").Types.ObjectId;

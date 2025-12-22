@@ -259,6 +259,32 @@ let UsersService = class UsersService {
             data: [],
         };
     }
+    async getAllUsers(page = 1, limit = 10) {
+        const skip = (page - 1) * limit;
+        const [users, total] = await Promise.all([
+            this.userModel
+                .find()
+                .select("-password -__v")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .lean(),
+            this.userModel.countDocuments({ isDeleted: false }),
+        ]);
+        return {
+            statusCode: common_1.HttpStatus.OK,
+            message: "Users fetched successfully.",
+            data: {
+                users,
+                pagination: {
+                    total,
+                    page,
+                    limit,
+                    totalPages: Math.ceil(total / limit),
+                },
+            },
+        };
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([

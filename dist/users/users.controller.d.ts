@@ -8,6 +8,23 @@ import { CheckEmailDto } from "./dto/check-email.dto";
 export declare class UsersController {
     private usersService;
     constructor(usersService: UsersService);
+    getAllUsers(page?: number, limit?: number): Promise<{
+        statusCode: HttpStatus;
+        message: string;
+        data: {
+            users: (import("mongoose").FlattenMaps<import("./user.schema").User> & Required<{
+                _id: import("mongoose").Types.ObjectId;
+            }> & {
+                __v: number;
+            })[];
+            pagination: {
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+            };
+        };
+    }>;
     socialLogin(body: SocialLoginDto): Promise<import("../utility/response.helper").ResponseStructure<{
         statusCode: HttpStatus;
         message: string;

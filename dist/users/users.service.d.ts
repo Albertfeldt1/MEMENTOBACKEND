@@ -79,4 +79,21 @@ export declare class UsersService {
         message: string;
         data: never[];
     }>;
+    getAllUsers(page?: number, limit?: number): Promise<{
+        statusCode: HttpStatus;
+        message: string;
+        data: {
+            users: (import("mongoose").FlattenMaps<User> & Required<{
+                _id: import("mongoose").Types.ObjectId;
+            }> & {
+                __v: number;
+            })[];
+            pagination: {
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+            };
+        };
+    }>;
 }

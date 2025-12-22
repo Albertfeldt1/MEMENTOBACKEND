@@ -27,6 +27,9 @@ let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
+    async getAllUsers(page = 1, limit = 10) {
+        return this.usersService.getAllUsers(Number(page), Number(limit));
+    }
     async socialLogin(body) {
         return this.usersService.socialLogin(body);
     }
@@ -79,6 +82,14 @@ let UsersController = class UsersController {
     }
 };
 exports.UsersController = UsersController;
+__decorate([
+    (0, common_1.Get)('get-all-users'),
+    __param(0, (0, common_1.Query)("page")),
+    __param(1, (0, common_1.Query)("limit")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getAllUsers", null);
 __decorate([
     (0, common_1.Post)("social-login"),
     __param(0, (0, common_1.Body)()),
