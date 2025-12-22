@@ -226,7 +226,7 @@ export class UsersService {
       throw new NotFoundException("The requested user does not exist.");
     }
     if (body?.name) user.name = body.name;
-    if (body?.image) user.name = body.image;
+    if (body?.image) user.image = body.image;
     if (body?.email) user.email = body.email.toLowerCase();
     if (body?.dob) user.dob = new Date(body.dob);
     if (body?.device_type) user.device_type = body.device_type;

@@ -15,6 +15,7 @@ import { AdminAuthModule } from './admin-auth/admin-auth.module';
 import { NotificationsModules } from './notifications/notifications.module';
 import { PagesModule } from './pages/pages.module';
 import { EventModule } from './event/event.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { EventModule } from './event/event.module';
     NotificationsModules,
     PagesModule,
     EventModule,
+    SubscriptionModule,
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],

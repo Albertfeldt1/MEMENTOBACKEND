@@ -221,7 +221,7 @@ let UsersService = class UsersService {
         if (body?.name)
             user.name = body.name;
         if (body?.image)
-            user.name = body.image;
+            user.image = body.image;
         if (body?.email)
             user.email = body.email.toLowerCase();
         if (body?.dob)
