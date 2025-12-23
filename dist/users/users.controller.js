@@ -23,9 +23,11 @@ const edit_profile_dto_1 = require("./dto/edit-profile.dto");
 const register_profile_dto_1 = require("./dto/register-profile.dto");
 const login_dto_1 = require("./dto/login.dto");
 const check_email_dto_1 = require("./dto/check-email.dto");
+const nestjs_i18n_1 = require("nestjs-i18n");
 let UsersController = class UsersController {
-    constructor(usersService) {
+    constructor(usersService, i18n) {
         this.usersService = usersService;
+        this.i18n = i18n;
     }
     async getAllUsers(page = 1, limit = 10) {
         return this.usersService.getAllUsers(Number(page), Number(limit));
@@ -37,12 +39,12 @@ let UsersController = class UsersController {
         if (!file) {
             return {
                 statusCode: common_1.HttpStatus.BAD_REQUEST,
-                message: "No file uploaded",
+                message: await this.i18n.translate('common.NO_FILE_UPLOADED')
             };
         }
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: "File uploaded successfully",
+            message: await this.i18n.translate('common.FILE_UPLOAD_SUCCESS'),
             data: {
                 fileName: file.filename,
                 path: `/uploads/${file.filename}`,
@@ -71,8 +73,8 @@ let UsersController = class UsersController {
         return {
             statusCode: 200,
             message: user.isNotification
-                ? "Notifications have been enabled successfully."
-                : "Notifications have been disabled successfully.",
+                ? await this.i18n.translate('common.NOTIFICATIONS_ENABLED')
+                : await this.i18n.translate('common.NOTIFICATIONS_DISABLED'),
             data: user,
         };
     }
@@ -83,7 +85,7 @@ let UsersController = class UsersController {
 };
 exports.UsersController = UsersController;
 __decorate([
-    (0, common_1.Get)('get-all-users'),
+    (0, common_1.Get)("get-all-users"),
     __param(0, (0, common_1.Query)("page")),
     __param(1, (0, common_1.Query)("limit")),
     __metadata("design:type", Function),
@@ -163,6 +165,7 @@ __decorate([
 ], UsersController.prototype, "getProfile", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)("users"),
-    __metadata("design:paramtypes", [users_service_1.UsersService])
+    __metadata("design:paramtypes", [users_service_1.UsersService,
+        nestjs_i18n_1.I18nService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

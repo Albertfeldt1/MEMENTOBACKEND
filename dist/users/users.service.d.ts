@@ -1,6 +1,7 @@
 import { Model } from "mongoose";
 import { User } from "./user.schema";
 import { JwtService } from "@nestjs/jwt";
+import { I18nService } from "nestjs-i18n";
 import { NotificationsService } from "src/notification/notification.service";
 import { HttpStatus } from "@nestjs/common";
 import { SocialLoginDto } from "./dto/social-login.dto";
@@ -11,7 +12,8 @@ export declare class UsersService {
     private userModel;
     private jwtService;
     private notificationsService;
-    constructor(userModel: Model<User>, jwtService: JwtService, notificationsService: NotificationsService);
+    private readonly i18n;
+    constructor(userModel: Model<User>, jwtService: JwtService, notificationsService: NotificationsService, i18n: I18nService);
     socialLogin(body: SocialLoginDto): Promise<import("src/utility/response.helper").ResponseStructure<{
         statusCode: HttpStatus;
         message: string;

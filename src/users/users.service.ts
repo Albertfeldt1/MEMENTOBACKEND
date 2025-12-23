@@ -3,6 +3,7 @@ import { Model } from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 import { User } from "./user.schema";
 import { JwtService } from "@nestjs/jwt";
+import { I18nService } from "nestjs-i18n";
 import { InjectModel } from "@nestjs/mongoose";
 import { NotificationsModule } from "src/notification/notification.module";
 import { NotificationsService } from "src/notification/notification.service";
@@ -26,7 +27,8 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private jwtService: JwtService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private readonly i18n: I18nService
   ) {}
   async socialLogin(body: SocialLoginDto) {
     const { socialId, email, name, device_type, device_token } = body;
@@ -47,7 +49,7 @@ export class UsersService {
 
       return handleSuccess({
         statusCode: HttpStatus.OK,
-        message: "Login successful.",
+        message: await this.i18n.translate("auth.LOGIN_SUCCESS"),
         data: {
           token: this.jwtService.sign(payload),
           user,
@@ -82,7 +84,7 @@ export class UsersService {
 
         return handleSuccess({
           statusCode: HttpStatus.OK,
-          message: "Social account linked successfully.",
+          message: await this.i18n.translate("auth.SOCIAL_LINKED"),
           data: {
             token: this.jwtService.sign(payload),
             user,
@@ -108,7 +110,7 @@ export class UsersService {
 
     return handleSuccess({
       statusCode: HttpStatus.CREATED,
-      message: "Account created using social login.",
+      message: await this.i18n.translate("auth.SOCIAL_REGISTER_SUCCESS"),
       data: {
         token: this.jwtService.sign(payload),
         user,
@@ -124,7 +126,9 @@ export class UsersService {
     });
 
     if (existingUser) {
-      throw new ConflictException("Email already registered");
+      throw new ConflictException(
+        await this.i18n.translate("auth.EMAIL_ALREADY_REGISTERED")
+      );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -145,7 +149,7 @@ export class UsersService {
 
     return handleSuccess({
       statusCode: HttpStatus.CREATED,
-      message: "Account created successfully.",
+      message: await this.i18n.translate("auth.REGISTER_SUCCESS"),
       data: {
         token: this.jwtService.sign(payload),
         user,
@@ -161,12 +165,16 @@ export class UsersService {
     });
 
     if (!user || !user.password) {
-      throw new UnauthorizedException("Invalid email or password");
+      throw new UnauthorizedException(
+        await this.i18n.translate("auth.INVALID_CREDENTIALS")
+      );
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      throw new UnauthorizedException("Invalid email or password");
+      throw new UnauthorizedException(
+        await this.i18n.translate("auth.INVALID_CREDENTIALS")
+      );
     }
 
     // Update device info
@@ -182,7 +190,7 @@ export class UsersService {
 
     return handleSuccess({
       statusCode: HttpStatus.OK,
-      message: "Login successful.",
+      message: await this.i18n.translate("auth.LOGIN_SUCCESS"),
       data: {
         token: this.jwtService.sign(payload),
         user,
@@ -201,7 +209,10 @@ export class UsersService {
   }
 
   async getProfile(userId: string) {
-    if (!userId) throw new NotFoundException("User id is required");
+    if (!userId)
+      throw new NotFoundException(
+        await this.i18n.translate("common.USER_ID_REQUIRED")
+      );
 
     // find user, remove password and mongoose internal fields
     const user = await this.userModel
@@ -210,12 +221,14 @@ export class UsersService {
       .lean();
 
     if (!user) {
-      throw new NotFoundException("The requested user does not exist.");
+      throw new NotFoundException(
+        await this.i18n.translate("common.USER_NOT_FOUND")
+      );
     }
 
     return {
       statusCode: HttpStatus.OK,
-      message: "Profile fetched successfully.",
+      message: await this.i18n.translate("common.PROFILE_FETCHED"),
       data: { user },
     };
   }
@@ -223,7 +236,9 @@ export class UsersService {
   async editProfile(userId: string, body: any) {
     const user = await this.userModel.findById(userId);
     if (!user) {
-      throw new NotFoundException("The requested user does not exist.");
+      throw new NotFoundException(
+        await this.i18n.translate("common.USER_NOT_FOUND")
+      );
     }
     if (body?.name) user.name = body.name;
     if (body?.image) user.image = body.image;
@@ -235,7 +250,7 @@ export class UsersService {
     await user.save();
     return {
       statusCode: HttpStatus.OK,
-      message: "Profile updated successfully",
+      message: await this.i18n.translate("common.PROFILE_UPDATED"),
       data: user,
     };
   }
@@ -244,7 +259,9 @@ export class UsersService {
     const user = await this.userModel.findById(userId);
 
     if (!user) {
-      throw new NotFoundException("The requested user does not exist.");
+      throw new NotFoundException(
+        await this.i18n.translate("common.USER_NOT_FOUND")
+      );
     }
     user.isNotification = !user.isNotification;
     await user.save();
@@ -254,7 +271,9 @@ export class UsersService {
   async logout(userId: string) {
     const user = await this.userModel.findById(userId);
     if (!user) {
-      throw new NotFoundException("The requested user does not exist.");
+      throw new NotFoundException(
+        await this.i18n.translate("common.USER_NOT_FOUND")
+      );
     }
 
     // Clear device token
@@ -264,7 +283,7 @@ export class UsersService {
 
     return {
       statusCode: HttpStatus.OK,
-      message: "User logged out successfully",
+      message:await this.i18n.translate("common.LOGOUT_SUCCESS"),
       data: [],
     };
   }
@@ -286,7 +305,7 @@ export class UsersService {
 
     return {
       statusCode: HttpStatus.OK,
-      message: "Users fetched successfully.",
+      message: await this.i18n.translate("common.USERS_FETCHED"),
       data: {
         users,
         pagination: {
@@ -296,6 +315,6 @@ export class UsersService {
           totalPages: Math.ceil(total / limit),
         },
       },
-    }
+    };
   }
 }

@@ -50,15 +50,17 @@ const bcrypt = __importStar(require("bcrypt"));
 const mongoose_1 = require("mongoose");
 const user_schema_1 = require("./user.schema");
 const jwt_1 = require("@nestjs/jwt");
+const nestjs_i18n_1 = require("nestjs-i18n");
 const mongoose_2 = require("@nestjs/mongoose");
 const notification_service_1 = require("../notification/notification.service");
 const common_1 = require("@nestjs/common");
 const response_helper_1 = require("../utility/response.helper");
 let UsersService = class UsersService {
-    constructor(userModel, jwtService, notificationsService) {
+    constructor(userModel, jwtService, notificationsService, i18n) {
         this.userModel = userModel;
         this.jwtService = jwtService;
         this.notificationsService = notificationsService;
+        this.i18n = i18n;
     }
     async socialLogin(body) {
         const { socialId, email, name, device_type, device_token } = body;
@@ -74,7 +76,7 @@ let UsersService = class UsersService {
             };
             return (0, response_helper_1.handleSuccess)({
                 statusCode: common_1.HttpStatus.OK,
-                message: "Login successful.",
+                message: await this.i18n.translate("auth.LOGIN_SUCCESS"),
                 data: {
                     token: this.jwtService.sign(payload),
                     user,
@@ -100,7 +102,7 @@ let UsersService = class UsersService {
                 };
                 return (0, response_helper_1.handleSuccess)({
                     statusCode: common_1.HttpStatus.OK,
-                    message: "Social account linked successfully.",
+                    message: await this.i18n.translate("auth.SOCIAL_LINKED"),
                     data: {
                         token: this.jwtService.sign(payload),
                         user,
@@ -122,7 +124,7 @@ let UsersService = class UsersService {
         };
         return (0, response_helper_1.handleSuccess)({
             statusCode: common_1.HttpStatus.CREATED,
-            message: "Account created using social login.",
+            message: await this.i18n.translate("auth.SOCIAL_REGISTER_SUCCESS"),
             data: {
                 token: this.jwtService.sign(payload),
                 user,
@@ -135,7 +137,7 @@ let UsersService = class UsersService {
             email: email.toLowerCase(),
         });
         if (existingUser) {
-            throw new common_1.ConflictException("Email already registered");
+            throw new common_1.ConflictException(await this.i18n.translate("auth.EMAIL_ALREADY_REGISTERED"));
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await this.userModel.create({
@@ -152,7 +154,7 @@ let UsersService = class UsersService {
         };
         return (0, response_helper_1.handleSuccess)({
             statusCode: common_1.HttpStatus.CREATED,
-            message: "Account created successfully.",
+            message: await this.i18n.translate("auth.REGISTER_SUCCESS"),
             data: {
                 token: this.jwtService.sign(payload),
                 user,
@@ -165,11 +167,11 @@ let UsersService = class UsersService {
             email: email.toLowerCase(),
         });
         if (!user || !user.password) {
-            throw new common_1.UnauthorizedException("Invalid email or password");
+            throw new common_1.UnauthorizedException(await this.i18n.translate("auth.INVALID_CREDENTIALS"));
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            throw new common_1.UnauthorizedException("Invalid email or password");
+            throw new common_1.UnauthorizedException(await this.i18n.translate("auth.INVALID_CREDENTIALS"));
         }
         user.device_type = device_type ?? user.device_type;
         user.device_token = device_token ?? user.device_token;
@@ -181,7 +183,7 @@ let UsersService = class UsersService {
         };
         return (0, response_helper_1.handleSuccess)({
             statusCode: common_1.HttpStatus.OK,
-            message: "Login successful.",
+            message: await this.i18n.translate("auth.LOGIN_SUCCESS"),
             data: {
                 token: this.jwtService.sign(payload),
                 user,
@@ -199,24 +201,24 @@ let UsersService = class UsersService {
     }
     async getProfile(userId) {
         if (!userId)
-            throw new common_1.NotFoundException("User id is required");
+            throw new common_1.NotFoundException(await this.i18n.translate("common.USER_ID_REQUIRED"));
         const user = await this.userModel
             .findById(userId)
             .select("-password -__v")
             .lean();
         if (!user) {
-            throw new common_1.NotFoundException("The requested user does not exist.");
+            throw new common_1.NotFoundException(await this.i18n.translate("common.USER_NOT_FOUND"));
         }
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: "Profile fetched successfully.",
+            message: await this.i18n.translate("common.PROFILE_FETCHED"),
             data: { user },
         };
     }
     async editProfile(userId, body) {
         const user = await this.userModel.findById(userId);
         if (!user) {
-            throw new common_1.NotFoundException("The requested user does not exist.");
+            throw new common_1.NotFoundException(await this.i18n.translate("common.USER_NOT_FOUND"));
         }
         if (body?.name)
             user.name = body.name;
@@ -233,14 +235,14 @@ let UsersService = class UsersService {
         await user.save();
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: "Profile updated successfully",
+            message: await this.i18n.translate("common.PROFILE_UPDATED"),
             data: user,
         };
     }
     async toggleNotificationUser(userId) {
         const user = await this.userModel.findById(userId);
         if (!user) {
-            throw new common_1.NotFoundException("The requested user does not exist.");
+            throw new common_1.NotFoundException(await this.i18n.translate("common.USER_NOT_FOUND"));
         }
         user.isNotification = !user.isNotification;
         await user.save();
@@ -249,13 +251,13 @@ let UsersService = class UsersService {
     async logout(userId) {
         const user = await this.userModel.findById(userId);
         if (!user) {
-            throw new common_1.NotFoundException("The requested user does not exist.");
+            throw new common_1.NotFoundException(await this.i18n.translate("common.USER_NOT_FOUND"));
         }
         user.device_token = "";
         await user.save();
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: "User logged out successfully",
+            message: await this.i18n.translate("common.LOGOUT_SUCCESS"),
             data: [],
         };
     }
@@ -273,7 +275,7 @@ let UsersService = class UsersService {
         ]);
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: "Users fetched successfully.",
+            message: await this.i18n.translate("common.USERS_FETCHED"),
             data: {
                 users,
                 pagination: {
@@ -292,6 +294,7 @@ exports.UsersService = UsersService = __decorate([
     __param(0, (0, mongoose_2.InjectModel)(user_schema_1.User.name)),
     __metadata("design:paramtypes", [mongoose_1.Model,
         jwt_1.JwtService,
-        notification_service_1.NotificationsService])
+        notification_service_1.NotificationsService,
+        nestjs_i18n_1.I18nService])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map

@@ -25,19 +25,18 @@ import { RegisterDto } from "./dto/register-profile.dto";
 import { LoginDto } from "./dto/login.dto";
 import { CheckEmailDto } from "./dto/check-email.dto";
 
+import { I18nService } from "nestjs-i18n";
+
 @Controller("users")
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private readonly i18n: I18nService
+  ) {}
 
-  @Get('get-all-users')
-  async getAllUsers(
-    @Query("page") page = 1,
-    @Query("limit") limit = 10,
-  ) {
-    return this.usersService.getAllUsers(
-      Number(page),
-      Number(limit),
-    );
+  @Get("get-all-users")
+  async getAllUsers(@Query("page") page = 1, @Query("limit") limit = 10) {
+    return this.usersService.getAllUsers(Number(page), Number(limit));
   }
 
   @Post("social-login")
@@ -50,12 +49,12 @@ export class UsersController {
     if (!file) {
       return {
         statusCode: HttpStatus.BAD_REQUEST,
-        message: "No file uploaded",
+        message: await this.i18n.translate('common.NO_FILE_UPLOADED')
       };
     }
     return {
       statusCode: HttpStatus.OK,
-      message: "File uploaded successfully",
+       message: await this.i18n.translate('common.FILE_UPLOAD_SUCCESS'),
       data: {
         fileName: file.filename,
         path: `/uploads/${file.filename}`,
@@ -103,8 +102,8 @@ export class UsersController {
     return {
       statusCode: 200,
       message: user.isNotification
-        ? "Notifications have been enabled successfully."
-        : "Notifications have been disabled successfully.",
+        ? await this.i18n.translate('common.NOTIFICATIONS_ENABLED')
+        : await this.i18n.translate('common.NOTIFICATIONS_DISABLED'),
       data: user,
     };
   }
@@ -116,5 +115,4 @@ export class UsersController {
     const userId = req.user.userId;
     return this.usersService.getProfile(userId);
   }
-
 }

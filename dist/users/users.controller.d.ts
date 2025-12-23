@@ -5,9 +5,11 @@ import { EditProfileDto } from "./dto/edit-profile.dto";
 import { RegisterDto } from "./dto/register-profile.dto";
 import { LoginDto } from "./dto/login.dto";
 import { CheckEmailDto } from "./dto/check-email.dto";
+import { I18nService } from "nestjs-i18n";
 export declare class UsersController {
     private usersService;
-    constructor(usersService: UsersService);
+    private readonly i18n;
+    constructor(usersService: UsersService, i18n: I18nService);
     getAllUsers(page?: number, limit?: number): Promise<{
         statusCode: HttpStatus;
         message: string;
