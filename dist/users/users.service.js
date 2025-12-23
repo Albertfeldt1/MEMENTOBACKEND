@@ -287,6 +287,15 @@ let UsersService = class UsersService {
             },
         };
     }
+    async sendTestNotification(deviceToken) {
+        const title = "Test Notification";
+        const body = "This notification is sent via NotificationsService";
+        const data = {
+            type: "test",
+            screen: "home",
+        };
+        return await this.notificationsService.sendPushNotification(deviceToken, title, body, data);
+    }
 };
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([

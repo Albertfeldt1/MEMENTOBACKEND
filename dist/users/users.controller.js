@@ -51,6 +51,9 @@ let UsersController = class UsersController {
             },
         };
     }
+    async sendTestNotification(deviceToken) {
+        return this.usersService.sendTestNotification(deviceToken);
+    }
     async register(body) {
         return this.usersService.register(body);
     }
@@ -107,6 +110,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "uploadImage", null);
+__decorate([
+    (0, common_1.Post)('test-notification'),
+    __param(0, (0, common_1.Body)('deviceToken')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "sendTestNotification", null);
 __decorate([
     (0, common_1.Post)("register"),
     __param(0, (0, common_1.Body)()),

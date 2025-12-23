@@ -62,6 +62,13 @@ export class UsersController {
     };
   }
 
+  @Post('test-notification')
+  async sendTestNotification(
+    @Body('deviceToken') deviceToken: string,
+  ) {
+    return this.usersService.sendTestNotification(deviceToken);
+  }
+  
   @Post("register")
   async register(@Body() body: RegisterDto) {
     return this.usersService.register(body);

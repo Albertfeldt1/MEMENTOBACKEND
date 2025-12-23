@@ -283,7 +283,7 @@ export class UsersService {
 
     return {
       statusCode: HttpStatus.OK,
-      message:await this.i18n.translate("common.LOGOUT_SUCCESS"),
+      message: await this.i18n.translate("common.LOGOUT_SUCCESS"),
       data: [],
     };
   }
@@ -316,5 +316,21 @@ export class UsersService {
         },
       },
     };
+  }
+
+  async sendTestNotification(deviceToken:string) {
+    const title = "Test Notification";
+    const body = "This notification is sent via NotificationsService";
+    const data = {
+      type: "test",
+      screen: "home",
+    };
+
+    return await this.notificationsService.sendPushNotification(
+      deviceToken,
+      title,
+      body,
+      data
+    );
   }
 }

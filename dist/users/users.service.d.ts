@@ -98,4 +98,13 @@ export declare class UsersService {
             };
         };
     }>;
+    sendTestNotification(deviceToken: string): Promise<{
+        success: boolean;
+        message: string;
+        response: string;
+    } | {
+        success: boolean;
+        message: any;
+        response?: undefined;
+    }>;
 }
