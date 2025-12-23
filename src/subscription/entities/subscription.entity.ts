@@ -12,6 +12,9 @@ export class Subscription {
   planName: string; 
 
   @Prop({ required: true })
+  language: string; 
+
+  @Prop({ required: true })
   price: number;
 
   @Prop({ default: 'yearly' })

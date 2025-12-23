@@ -25,6 +25,10 @@ __decorate([
 ], Subscription.prototype, "planName", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
+    __metadata("design:type", String)
+], Subscription.prototype, "language", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", Number)
 ], Subscription.prototype, "price", void 0);
 __decorate([

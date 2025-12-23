@@ -3,6 +3,7 @@ export type SubscriptionDocument = Subscription & Document;
 export declare class Subscription {
     userId: Types.ObjectId;
     planName: string;
+    language: string;
     price: number;
     billingCycle: string;
     isActive: boolean;

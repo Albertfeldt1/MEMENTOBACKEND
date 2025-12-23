@@ -24,9 +24,10 @@ export declare class SubscriptionController {
             }, Omit<{
                 planName: string;
                 price: number;
+                language: string;
                 billingCycle: string;
-                features: string[];
                 isActive: boolean;
+                features: string[];
             }, "_id">>[];
             existingPlans?: undefined;
         };
@@ -40,17 +41,14 @@ export declare class SubscriptionController {
             __v: number;
         };
     }>;
-    findAll(req: any): Promise<{
+    findAll(lang: string): Promise<{
         statusCode: number;
         message: string;
-        data: {
+        data: (import("mongoose").Document<unknown, {}, import("./entities/subscription.entity").SubscriptionDocument, {}, {}> & import("./entities/subscription.entity").Subscription & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
             _id: import("mongoose").Types.ObjectId;
-            planName: string;
-            price: number;
-            billingCycle: string;
-            isActive: boolean;
-            features: string[];
-        }[];
+        }> & {
+            __v: number;
+        })[];
     }>;
     findOne(req: any, id: string): Promise<{
         statusCode: number;

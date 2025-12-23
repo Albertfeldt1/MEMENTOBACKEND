@@ -39,8 +39,8 @@ let SubscriptionController = class SubscriptionController {
             data,
         };
     }
-    async findAll(req) {
-        const data = await this.subscriptionService.findAll();
+    async findAll(lang) {
+        const data = await this.subscriptionService.findAll(lang);
         return {
             statusCode: 200,
             message: await this.i18n.translate(`common.SUBSCRIPTIONS_FETCHED`),
@@ -89,9 +89,9 @@ __decorate([
 ], SubscriptionController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
-    __param(0, (0, common_1.Request)()),
+    __param(0, (0, common_1.Query)("lang")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], SubscriptionController.prototype, "findAll", null);
 __decorate([
@@ -103,9 +103,9 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SubscriptionController.prototype, "findOne", null);
 __decorate([
-    (0, common_1.Patch)(":id"),
+    (0, common_1.Patch)("update-subscription"),
     __param(0, (0, common_1.Request)()),
-    __param(1, (0, common_1.Param)("id")),
+    __param(1, (0, common_1.Query)("id")),
     __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String, update_subscription_dto_1.UpdateSubscriptionDto]),

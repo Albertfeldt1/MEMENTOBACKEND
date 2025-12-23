@@ -48,8 +48,8 @@ export class SubscriptionController {
   }
 
   @Get()
-  async findAll(@Request() req: any) {
-    const data = await this.subscriptionService.findAll();
+  async findAll(@Query("lang") lang: string) {
+    const data = await this.subscriptionService.findAll(lang);
 
     return {
       statusCode: 200,
@@ -69,10 +69,10 @@ export class SubscriptionController {
     };
   }
 
-  @Patch(":id")
+  @Patch("update-subscription")
   async update(
     @Request() req: any,
-    @Param("id") id: string,
+    @Query("id") id: string,
     @Body() updateSubscriptionDto: UpdateSubscriptionDto
   ) {
     const data = await this.subscriptionService.update(

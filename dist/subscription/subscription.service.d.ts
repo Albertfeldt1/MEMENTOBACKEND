@@ -22,9 +22,10 @@ export declare class SubscriptionService {
         }, Omit<{
             planName: string;
             price: number;
+            language: string;
             billingCycle: string;
-            features: string[];
             isActive: boolean;
+            features: string[];
         }, "_id">>[];
         existingPlans?: undefined;
     }>;
@@ -33,14 +34,11 @@ export declare class SubscriptionService {
     }> & {
         __v: number;
     }>;
-    findAll(): Promise<{
+    findAll(lang?: string): Promise<(import("mongoose").Document<unknown, {}, SubscriptionDocument, {}, {}> & Subscription & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
         _id: Types.ObjectId;
-        planName: string;
-        price: number;
-        billingCycle: string;
-        isActive: boolean;
-        features: string[];
-    }[]>;
+    }> & {
+        __v: number;
+    })[]>;
     findOne(id: string): Promise<import("mongoose").Document<unknown, {}, SubscriptionDocument, {}, {}> & Subscription & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
         _id: Types.ObjectId;
     }> & {
