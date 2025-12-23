@@ -42,6 +42,7 @@ const common_1 = require("@nestjs/common");
 const path_1 = require("path");
 const morgan_1 = __importDefault(require("morgan"));
 const bodyParser = __importStar(require("body-parser"));
+const nestjs_i18n_1 = require("nestjs-i18n");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.use((0, morgan_1.default)('combined'));
@@ -51,6 +52,7 @@ async function bootstrap() {
         credentials: true,
     });
     app.use('/webhook', bodyParser.raw({ type: 'application/json' }));
+    app.use(nestjs_i18n_1.I18nMiddleware);
     app.use(bodyParser.json());
     app.setViewEngine('ejs');
     app.setBaseViewsDir((0, path_1.join)(__dirname, '..', 'views'));

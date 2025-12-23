@@ -9,7 +9,7 @@ export declare class NotificationsController {
     } & {
         __v: number;
     }>;
-    findAll(userId: string): Promise<"This action returns all notifications" | {
+    findAll(userId: string): Promise<{
         statusCode: import("@nestjs/common").HttpStatus;
         message: string;
         data: (import("mongoose").Document<unknown, {}, import("./entities/notification.entity").Notification, {}, {}> & import("./entities/notification.entity").Notification & {

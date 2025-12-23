@@ -31,12 +31,17 @@ export declare class EventController {
             __v: number;
         };
     }>;
-    update(id: string, dto: UpdateEventDto): Promise<import("mongoose").Document<unknown, {}, import("./entities/event.entity").EventDocument, {}, {}> & import("./entities/event.entity").Event & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
-        _id: import("mongoose").Types.ObjectId;
-    }> & {
-        __v: number;
+    update(id: string, dto: UpdateEventDto): Promise<{
+        statusCode: import("@nestjs/common").HttpStatus;
+        message: string;
+        data: import("mongoose").Document<unknown, {}, import("./entities/event.entity").EventDocument, {}, {}> & import("./entities/event.entity").Event & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+            _id: import("mongoose").Types.ObjectId;
+        }> & {
+            __v: number;
+        };
     }>;
     delete(id: string): Promise<{
+        statusCode: import("@nestjs/common").HttpStatus;
         message: string;
     }>;
 }

@@ -15,7 +15,7 @@ export declare class NotificationsServices {
     } & {
         __v: number;
     }, Omit<any, "_id">>[]>;
-    findAll(userId: string): Promise<"This action returns all notifications" | {
+    findAll(userId: string): Promise<{
         statusCode: HttpStatus;
         message: string;
         data: (mongoose.Document<unknown, {}, Notification, {}, {}> & Notification & {

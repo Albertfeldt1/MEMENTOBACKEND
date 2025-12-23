@@ -16,10 +16,12 @@ exports.EventService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const nestjs_i18n_1 = require("nestjs-i18n");
 const event_entity_1 = require("./entities/event.entity");
 let EventService = class EventService {
-    constructor(eventModel) {
+    constructor(eventModel, i18n) {
         this.eventModel = eventModel;
+        this.i18n = i18n;
     }
     async create(userId, dto) {
         const data = await this.eventModel.create({
@@ -27,24 +29,22 @@ let EventService = class EventService {
             ...dto,
             date: new Date(dto.date),
         });
-        const response = {
+        return {
             statusCode: common_1.HttpStatus.OK,
-            message: "Event created successfully",
+            message: await this.i18n.translate('common.EVENT_CREATED'),
             data,
         };
-        return response;
     }
     async findAll(userId) {
         const data = await this.eventModel
             .find({ userId: new mongoose_2.Types.ObjectId(userId) })
-            .populate("userId", "-password")
+            .populate('userId', '-password')
             .sort({ createdAt: -1 });
-        const response = {
+        return {
             statusCode: common_1.HttpStatus.OK,
-            message: "All events fetched successfully",
+            message: await this.i18n.translate('common.EVENTS_FETCHED'),
             data,
         };
-        return response;
     }
     async findById(userId, eventId) {
         const event = await this.eventModel
@@ -52,13 +52,13 @@ let EventService = class EventService {
             _id: new mongoose_2.Types.ObjectId(eventId),
             userId: new mongoose_2.Types.ObjectId(userId),
         })
-            .populate("userId", "-password");
+            .populate('userId', '-password');
         if (!event) {
-            throw new common_1.NotFoundException("Event not found");
+            throw new common_1.NotFoundException(await this.i18n.translate('common.EVENT_NOT_FOUND'));
         }
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: "Event details fetched successfully",
+            message: await this.i18n.translate('common.EVENT_DETAILS_FETCHED'),
             data: event,
         };
     }
@@ -66,21 +66,31 @@ let EventService = class EventService {
         const event = await this.eventModel.findByIdAndUpdate(id, dto, {
             new: true,
         });
-        if (!event)
-            throw new common_1.NotFoundException("Event not found");
-        return event;
+        if (!event) {
+            throw new common_1.NotFoundException(await this.i18n.translate('common.EVENT_NOT_FOUND'));
+        }
+        return {
+            statusCode: common_1.HttpStatus.OK,
+            message: await this.i18n.translate('common.DATA_FETCHED'),
+            data: event,
+        };
     }
     async delete(id) {
         const event = await this.eventModel.findByIdAndDelete(id);
-        if (!event)
-            throw new common_1.NotFoundException("Event not found");
-        return { message: "Event deleted successfully" };
+        if (!event) {
+            throw new common_1.NotFoundException(await this.i18n.translate('common.EVENT_NOT_FOUND'));
+        }
+        return {
+            statusCode: common_1.HttpStatus.OK,
+            message: await this.i18n.translate('common.EVENT_DELETED'),
+        };
     }
 };
 exports.EventService = EventService;
 exports.EventService = EventService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(event_entity_1.Event.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        nestjs_i18n_1.I18nService])
 ], EventService);
 //# sourceMappingURL=event.service.js.map

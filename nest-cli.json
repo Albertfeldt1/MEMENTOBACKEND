@@ -7,6 +7,10 @@
       {
         "include": "src/notification/templates/**/*",
         "outDir": "dist/src/notification/templates"
+      },
+        {
+        "include": "src/i18n/**/*",
+        "outDir": "dist/i18n"
       }
     ]
   }

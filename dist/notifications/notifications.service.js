@@ -70,7 +70,6 @@ let NotificationsServices = class NotificationsServices {
             message: 'Fetched all notifications of a user',
             data,
         };
-        return `This action returns all notifications`;
     }
     findOne(id) {
         return `This action returns a #${id} notification`;

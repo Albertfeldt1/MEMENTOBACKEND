@@ -28,7 +28,6 @@ export class NotificationsServices {
         message: 'Fetched all notifications of a user',
         data,
       };
-    return `This action returns all notifications`;
   }
 
   findOne(id: number) {

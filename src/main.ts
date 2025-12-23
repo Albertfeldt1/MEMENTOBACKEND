@@ -7,6 +7,7 @@ import  morgan from 'morgan';  // <-- import morgan
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as fileUpload from 'express-fileupload';
+import { I18nMiddleware } from 'nestjs-i18n';
 
 
 async function bootstrap() {
@@ -21,6 +22,7 @@ async function bootstrap() {
     '/webhook', // Your exact webhook route
     bodyParser.raw({ type: 'application/json' }),
   );
+  app.use(I18nMiddleware);
   // app.use('/webhook', bodyParser.raw({ type: '*/*' }));
   app.use(bodyParser.json());
   app.setViewEngine('ejs');
