@@ -9,6 +9,8 @@ import {
   UseGuards,
   Request,
 } from "@nestjs/common";
+import { I18nService } from "nestjs-i18n";
+
 import { SubscriptionService } from "./subscription.service";
 import { CreateSubscriptionDto } from "./dto/create-subscription.dto";
 import { UpdateSubscriptionDto } from "./dto/update-subscription.dto";
@@ -16,7 +18,10 @@ import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 
 @Controller("subscription")
 export class SubscriptionController {
-  constructor(private readonly subscriptionService: SubscriptionService) {}
+  constructor(
+    private readonly subscriptionService: SubscriptionService,
+    private readonly i18n: I18nService
+  ) {}
   @Post("seed")
   async seedSubscriptions() {
     const result = await this.subscriptionService.insertManySubscriptions();
@@ -32,9 +37,7 @@ export class SubscriptionController {
     @Request() req: any,
     @Body() createSubscriptionDto: CreateSubscriptionDto
   ) {
-    const data = await this.subscriptionService.create(
-      createSubscriptionDto
-    );
+    const data = await this.subscriptionService.create(createSubscriptionDto);
 
     return {
       statusCode: 201,
@@ -49,7 +52,7 @@ export class SubscriptionController {
 
     return {
       statusCode: 200,
-      message: "Subscriptions fetched successfully",
+      message: await this.i18n.translate(`common.SUBSCRIPTIONS_FETCHED`),
       data,
     };
   }

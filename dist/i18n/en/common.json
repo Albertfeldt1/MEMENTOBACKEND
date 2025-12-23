@@ -20,5 +20,32 @@
   "EVENTS_FETCHED": "All events fetched successfully.",
   "EVENT_NOT_FOUND": "Event not found.",
   "EVENT_DETAILS_FETCHED": "Event details fetched successfully.",
-  "EVENT_DELETED": "Event deleted successfully."
+  "EVENT_DELETED": "Event deleted successfully.",
+
+  "PLAN_BASIC": "Basic",
+  "PLAN_PREMIUM": "Premium",
+  "PLAN_PRO": "Pro",
+
+  "FEATURE_BASIC_ALBUMS": "Up to 5 photo albums",
+  "FEATURE_BASIC_PHOTOS": "100 photos per album",
+  "FEATURE_BASIC_EDITING": "Basic editing tools",
+  "FEATURE_STANDARD_PRINTS": "Standard quality prints",
+  "FEATURE_EMAIL_SUPPORT": "Email support",
+
+  "FEATURE_UNLIMITED_ALBUMS": "Unlimited photo albums",
+  "FEATURE_500_PHOTOS": "500 photos per album",
+  "FEATURE_ADVANCED_EDITING": "Advanced editing tools",
+  "FEATURE_HIGH_QUALITY_PRINTS": "High quality prints",
+  "FEATURE_PRIORITY_SUPPORT": "Priority support",
+  "FEATURE_CLOUD_BACKUP": "Cloud backup",
+
+  "FEATURE_EVERYTHING_PREMIUM": "Everything in Premium",
+  "FEATURE_UNLIMITED_PHOTOS": "Unlimited photos per album",
+  "FEATURE_PRO_EDITING": "Professional editing suite",
+  "FEATURE_PREMIUM_PRINTS": "Premium quality prints",
+  "FEATURE_247_SUPPORT": "24/7 dedicated support",
+  "FEATURE_COLLABORATION": "Collaboration features",
+  "FEATURE_CUSTOM_BRANDING": "Custom branding",
+
+  "SUBSCRIPTIONS_FETCHED": "Subscriptions fetched successfully"
 }

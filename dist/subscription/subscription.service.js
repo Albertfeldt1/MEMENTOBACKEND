@@ -16,52 +16,54 @@ exports.SubscriptionService = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const nestjs_i18n_1 = require("nestjs-i18n");
 const subscription_entity_1 = require("./entities/subscription.entity");
 let SubscriptionService = class SubscriptionService {
-    constructor(subscriptionModel) {
+    constructor(subscriptionModel, i18n) {
         this.subscriptionModel = subscriptionModel;
+        this.i18n = i18n;
     }
     async insertManySubscriptions() {
         const plans = [
             {
-                planName: "Basic",
+                planName: "PLAN_BASIC",
                 price: 99.99,
                 billingCycle: "yearly",
                 features: [
-                    "Up to 5 photo albums",
-                    "100 photos per album",
-                    "Basic editing tools",
-                    "Standard quality prints",
-                    "Email support",
+                    "FEATURE_BASIC_ALBUMS",
+                    "FEATURE_BASIC_PHOTOS",
+                    "FEATURE_BASIC_EDITING",
+                    "FEATURE_STANDARD_PRINTS",
+                    "FEATURE_EMAIL_SUPPORT",
                 ],
                 isActive: true,
             },
             {
-                planName: "Premium",
+                planName: "PLAN_PREMIUM",
                 price: 199.99,
                 billingCycle: "yearly",
                 features: [
-                    "Unlimited photo albums",
-                    "500 photos per album",
-                    "Advanced editing tools",
-                    "High quality prints",
-                    "Priority support",
-                    "Cloud backup",
+                    "FEATURE_UNLIMITED_ALBUMS",
+                    "FEATURE_500_PHOTOS",
+                    "FEATURE_ADVANCED_EDITING",
+                    "FEATURE_HIGH_QUALITY_PRINTS",
+                    "FEATURE_PRIORITY_SUPPORT",
+                    "FEATURE_CLOUD_BACKUP",
                 ],
                 isActive: true,
             },
             {
-                planName: "Pro",
+                planName: "PLAN_PRO",
                 price: 299.99,
                 billingCycle: "yearly",
                 features: [
-                    "Everything in Premium",
-                    "Unlimited photos per album",
-                    "Professional editing suite",
-                    "Premium quality prints",
-                    "24/7 dedicated support",
-                    "Collaboration features",
-                    "Custom branding",
+                    "FEATURE_EVERYTHING_PREMIUM",
+                    "FEATURE_UNLIMITED_PHOTOS",
+                    "FEATURE_PRO_EDITING",
+                    "FEATURE_PREMIUM_PRINTS",
+                    "FEATURE_247_SUPPORT",
+                    "FEATURE_COLLABORATION",
+                    "FEATURE_CUSTOM_BRANDING",
                 ],
                 isActive: true,
             },
@@ -89,7 +91,17 @@ let SubscriptionService = class SubscriptionService {
         return subscription;
     }
     async findAll() {
-        return this.subscriptionModel.find({}).sort({ createdAt: -1 });
+        const subscriptions = await this.subscriptionModel
+            .find()
+            .sort({ createdAt: -1 });
+        return Promise.all(subscriptions.map(async (plan) => ({
+            _id: plan._id,
+            planName: await this.i18n.translate(`common.${plan.planName}`),
+            price: plan.price,
+            billingCycle: plan.billingCycle,
+            isActive: plan.isActive,
+            features: await Promise.all(plan.features.map((featureKey) => this.i18n.translate(`common.${featureKey}`))),
+        })));
     }
     async findOne(id) {
         const subscription = await this.subscriptionModel.findOne({
@@ -122,6 +134,7 @@ exports.SubscriptionService = SubscriptionService;
 exports.SubscriptionService = SubscriptionService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(subscription_entity_1.Subscription.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        nestjs_i18n_1.I18nService])
 ], SubscriptionService);
 //# sourceMappingURL=subscription.service.js.map

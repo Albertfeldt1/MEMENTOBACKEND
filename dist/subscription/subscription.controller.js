@@ -14,12 +14,14 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SubscriptionController = void 0;
 const common_1 = require("@nestjs/common");
+const nestjs_i18n_1 = require("nestjs-i18n");
 const subscription_service_1 = require("./subscription.service");
 const create_subscription_dto_1 = require("./dto/create-subscription.dto");
 const update_subscription_dto_1 = require("./dto/update-subscription.dto");
 let SubscriptionController = class SubscriptionController {
-    constructor(subscriptionService) {
+    constructor(subscriptionService, i18n) {
         this.subscriptionService = subscriptionService;
+        this.i18n = i18n;
     }
     async seedSubscriptions() {
         const result = await this.subscriptionService.insertManySubscriptions();
@@ -41,7 +43,7 @@ let SubscriptionController = class SubscriptionController {
         const data = await this.subscriptionService.findAll();
         return {
             statusCode: 200,
-            message: "Subscriptions fetched successfully",
+            message: await this.i18n.translate(`common.SUBSCRIPTIONS_FETCHED`),
             data,
         };
     }
@@ -119,6 +121,7 @@ __decorate([
 ], SubscriptionController.prototype, "remove", null);
 exports.SubscriptionController = SubscriptionController = __decorate([
     (0, common_1.Controller)("subscription"),
-    __metadata("design:paramtypes", [subscription_service_1.SubscriptionService])
+    __metadata("design:paramtypes", [subscription_service_1.SubscriptionService,
+        nestjs_i18n_1.I18nService])
 ], SubscriptionController);
 //# sourceMappingURL=subscription.controller.js.map

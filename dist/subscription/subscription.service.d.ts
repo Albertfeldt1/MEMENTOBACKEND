@@ -1,10 +1,12 @@
 import { Model, Types } from "mongoose";
+import { I18nService } from "nestjs-i18n";
 import { Subscription, SubscriptionDocument } from "./entities/subscription.entity";
 import { CreateSubscriptionDto } from "./dto/create-subscription.dto";
 import { UpdateSubscriptionDto } from "./dto/update-subscription.dto";
 export declare class SubscriptionService {
     private readonly subscriptionModel;
-    constructor(subscriptionModel: Model<SubscriptionDocument>);
+    private readonly i18n;
+    constructor(subscriptionModel: Model<SubscriptionDocument>, i18n: I18nService);
     insertManySubscriptions(): Promise<{
         message: string;
         existingPlans: string[];
@@ -31,11 +33,14 @@ export declare class SubscriptionService {
     }> & {
         __v: number;
     }>;
-    findAll(): Promise<(import("mongoose").Document<unknown, {}, SubscriptionDocument, {}, {}> & Subscription & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+    findAll(): Promise<{
         _id: Types.ObjectId;
-    }> & {
-        __v: number;
-    })[]>;
+        planName: string;
+        price: number;
+        billingCycle: string;
+        isActive: boolean;
+        features: string[];
+    }[]>;
     findOne(id: string): Promise<import("mongoose").Document<unknown, {}, SubscriptionDocument, {}, {}> & Subscription & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
         _id: Types.ObjectId;
     }> & {

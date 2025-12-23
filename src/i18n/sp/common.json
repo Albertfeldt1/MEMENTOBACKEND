@@ -20,5 +20,32 @@
   "EVENTS_FETCHED": "Todos los eventos se obtuvieron correctamente.",
   "EVENT_NOT_FOUND": "Evento no encontrado.",
   "EVENT_DETAILS_FETCHED": "Los detalles del evento se obtuvieron correctamente.",
-  "EVENT_DELETED": "El evento se eliminó correctamente."
+  "EVENT_DELETED": "El evento se eliminó correctamente.",
+  "PLAN_BASIC": "Básico",
+  "PLAN_PREMIUM": "Premium",
+  "PLAN_PRO": "Pro",
+
+  "FEATURE_BASIC_ALBUMS": "Hasta 5 álbumes de fotos",
+  "FEATURE_BASIC_PHOTOS": "100 fotos por álbum",
+  "FEATURE_BASIC_EDITING": "Herramientas básicas de edición",
+  "FEATURE_STANDARD_PRINTS": "Impresiones de calidad estándar",
+  "FEATURE_EMAIL_SUPPORT": "Soporte por correo electrónico",
+
+  "FEATURE_UNLIMITED_ALBUMS": "Álbumes de fotos ilimitados",
+  "FEATURE_500_PHOTOS": "500 fotos por álbum",
+  "FEATURE_ADVANCED_EDITING": "Herramientas avanzadas de edición",
+  "FEATURE_HIGH_QUALITY_PRINTS": "Impresiones de alta calidad",
+  "FEATURE_PRIORITY_SUPPORT": "Soporte prioritario",
+  "FEATURE_CLOUD_BACKUP": "Copia de seguridad en la nube",
+
+  "FEATURE_EVERYTHING_PREMIUM": "Todo lo incluido en Premium",
+  "FEATURE_UNLIMITED_PHOTOS": "Fotos ilimitadas por álbum",
+  "FEATURE_PRO_EDITING": "Suite de edición profesional",
+  "FEATURE_PREMIUM_PRINTS": "Impresiones de calidad premium",
+  "FEATURE_247_SUPPORT": "Soporte dedicado 24/7",
+  "FEATURE_COLLABORATION": "Funciones de colaboración",
+  "FEATURE_CUSTOM_BRANDING": "Marca personalizada",
+
+  "SUBSCRIPTIONS_FETCHED": "Las suscripciones se obtuvieron correctamente"
+
 }
