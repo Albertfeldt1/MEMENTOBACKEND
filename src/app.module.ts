@@ -43,8 +43,8 @@ import { SubscriptionModule } from "./subscription/subscription.module";
       fallbackLanguage: "en",
       loader: I18nJsonLoader,
       loaderOptions: {
-        path: path.join(__dirname, "/dist/i18n/"),
-        // path: path.join(__dirname, "i18n"),
+        // path: path.join(__dirname, "/dist/i18n/"),
+        path: path.join(__dirname, "i18n"),
         watch: true,
       },
       resolvers: [AcceptLanguageResolver],
