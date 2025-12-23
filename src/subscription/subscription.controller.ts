@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Request,
+  Query,
 } from "@nestjs/common";
 import { I18nService } from "nestjs-i18n";
 
@@ -47,8 +48,9 @@ export class SubscriptionController {
   }
 
   @Get()
-  async findAll(@Request() req: any) {
-    const data = await this.subscriptionService.findAll();
+  async findAll(@Request() req: any,@Query('billingCycle') billingCycle: string
+) {
+    const data = await this.subscriptionService.findAll(billingCycle);
 
     return {
       statusCode: 200,

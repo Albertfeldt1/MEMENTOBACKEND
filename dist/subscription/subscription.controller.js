@@ -39,8 +39,8 @@ let SubscriptionController = class SubscriptionController {
             data,
         };
     }
-    async findAll(req) {
-        const data = await this.subscriptionService.findAll();
+    async findAll(req, billingCycle) {
+        const data = await this.subscriptionService.findAll(billingCycle);
         return {
             statusCode: 200,
             message: await this.i18n.translate(`common.SUBSCRIPTIONS_FETCHED`),
@@ -90,8 +90,9 @@ __decorate([
 __decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Query)('billingCycle')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], SubscriptionController.prototype, "findAll", null);
 __decorate([

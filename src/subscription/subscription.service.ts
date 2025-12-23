@@ -19,6 +19,7 @@ export class SubscriptionService {
 
   async insertManySubscriptions() {
     const plans = [
+      // ===== YEARLY PLANS =====
       {
         planName: "PLAN_BASIC",
         price: 99.99,
@@ -61,16 +62,61 @@ export class SubscriptionService {
         ],
         isActive: true,
       },
+
+      // ===== MONTHLY PLANS =====
+      {
+        planName: "PLAN_BASIC",
+        price: 9.99,
+        billingCycle: "monthly",
+        features: [
+          "FEATURE_BASIC_ALBUMS",
+          "FEATURE_BASIC_PHOTOS",
+          "FEATURE_BASIC_EDITING",
+          "FEATURE_STANDARD_PRINTS",
+          "FEATURE_EMAIL_SUPPORT",
+        ],
+        isActive: true,
+      },
+      {
+        planName: "PLAN_PREMIUM",
+        price: 19.99,
+        billingCycle: "monthly",
+        features: [
+          "FEATURE_UNLIMITED_ALBUMS",
+          "FEATURE_500_PHOTOS",
+          "FEATURE_ADVANCED_EDITING",
+          "FEATURE_HIGH_QUALITY_PRINTS",
+          "FEATURE_PRIORITY_SUPPORT",
+          "FEATURE_CLOUD_BACKUP",
+        ],
+        isActive: true,
+      },
+      {
+        planName: "PLAN_PRO",
+        price: 29.99,
+        billingCycle: "monthly",
+        features: [
+          "FEATURE_EVERYTHING_PREMIUM",
+          "FEATURE_UNLIMITED_PHOTOS",
+          "FEATURE_PRO_EDITING",
+          "FEATURE_PREMIUM_PRINTS",
+          "FEATURE_247_SUPPORT",
+          "FEATURE_COLLABORATION",
+          "FEATURE_CUSTOM_BRANDING",
+        ],
+        isActive: true,
+      },
     ];
 
     const existing = await this.subscriptionModel.find({
       planName: { $in: plans.map((p) => p.planName) },
+      billingCycle: { $in: plans.map((p) => p.billingCycle) },
     });
 
     if (existing.length) {
       return {
         message: "Plans already exist",
-        existingPlans: existing.map((p) => p.planName),
+        existingPlans: existing.map((p) => `${p.planName} (${p.billingCycle})`),
       };
     }
 
@@ -91,9 +137,9 @@ export class SubscriptionService {
     return subscription;
   }
 
-  async findAll() {
+  async findAll(billingCycle:string) {
     const subscriptions = await this.subscriptionModel
-      .find()
+      .find({billingCycle})
       .sort({ createdAt: -1 });
 
     return Promise.all(
