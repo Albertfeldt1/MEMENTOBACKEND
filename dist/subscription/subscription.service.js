@@ -133,9 +133,9 @@ let SubscriptionService = class SubscriptionService {
         });
         return subscription;
     }
-    async findAll(billingCycle) {
+    async findAll() {
         const subscriptions = await this.subscriptionModel
-            .find({ billingCycle })
+            .find({})
             .sort({ createdAt: -1 });
         return Promise.all(subscriptions.map(async (plan) => ({
             _id: plan._id,

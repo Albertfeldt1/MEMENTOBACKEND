@@ -137,9 +137,9 @@ export class SubscriptionService {
     return subscription;
   }
 
-  async findAll(billingCycle:string) {
+  async findAll() {
     const subscriptions = await this.subscriptionModel
-      .find({billingCycle})
+      .find({})
       .sort({ createdAt: -1 });
 
     return Promise.all(

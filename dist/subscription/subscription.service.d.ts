@@ -33,7 +33,7 @@ export declare class SubscriptionService {
     }> & {
         __v: number;
     }>;
-    findAll(billingCycle: string): Promise<{
+    findAll(): Promise<{
         _id: Types.ObjectId;
         planName: string;
         price: number;

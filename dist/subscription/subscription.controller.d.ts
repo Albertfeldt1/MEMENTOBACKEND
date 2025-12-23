@@ -40,7 +40,7 @@ export declare class SubscriptionController {
             __v: number;
         };
     }>;
-    findAll(req: any, billingCycle: string): Promise<{
+    findAll(req: any): Promise<{
         statusCode: number;
         message: string;
         data: {
