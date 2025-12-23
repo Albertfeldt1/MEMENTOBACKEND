@@ -147,7 +147,6 @@ let SubscriptionService = class SubscriptionService {
         const subscriptions = await this.subscriptionModel
             .find(filter)
             .sort({ createdAt: -1 });
-        console.log(subscriptions.length);
         return subscriptions;
     }
     async findOne(id) {

@@ -142,12 +142,9 @@ export class SubscriptionService {
 
   async findAll(lang?: string) {
     const filter: any = {};
-
-    // apply language filter only if provided
     if (lang) {
       filter.language = lang;
     }
-
     const subscriptions = await this.subscriptionModel
       .find(filter)
       .sort({ createdAt: -1 });
