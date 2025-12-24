@@ -24,6 +24,10 @@ __decorate([
     __metadata("design:type", String)
 ], Event.prototype, "title", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ trim: true }),
+    __metadata("design:type", String)
+], Event.prototype, "image", void 0);
+__decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", Date)
 ], Event.prototype, "date", void 0);

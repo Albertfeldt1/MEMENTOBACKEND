@@ -1,9 +1,9 @@
-import { HttpStatus } from '@nestjs/common';
-import { Model, Types } from 'mongoose';
-import { I18nService } from 'nestjs-i18n';
-import { Event, EventDocument } from './entities/event.entity';
-import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
+import { HttpStatus } from "@nestjs/common";
+import { Model, Types } from "mongoose";
+import { I18nService } from "nestjs-i18n";
+import { Event, EventDocument } from "./entities/event.entity";
+import { CreateEventDto } from "./dto/create-event.dto";
+import { UpdateEventDto } from "./dto/update-event.dto";
 export declare class EventService {
     private readonly eventModel;
     private readonly i18n;
@@ -47,5 +47,19 @@ export declare class EventService {
     delete(id: string): Promise<{
         statusCode: HttpStatus;
         message: string;
+    }>;
+    updateEvent(userId: string, eventId: string, dto: UpdateEventDto): Promise<{
+        statusCode: HttpStatus;
+        message: string;
+        data: import("mongoose").Document<unknown, {}, EventDocument, {}, {}> & Event & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
+            _id: Types.ObjectId;
+        }> & {
+            __v: number;
+        };
+    }>;
+    deleteEvent(userId: string, eventId: string): Promise<{
+        statusCode: HttpStatus;
+        message: string;
+        data: never[];
     }>;
 }

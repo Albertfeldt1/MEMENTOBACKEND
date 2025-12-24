@@ -1,22 +1,18 @@
-import {
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { I18nService } from 'nestjs-i18n';
+import { HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
+import { Model, Types } from "mongoose";
+import { I18nService } from "nestjs-i18n";
 
-import { Event, EventDocument } from './entities/event.entity';
-import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
+import { Event, EventDocument } from "./entities/event.entity";
+import { CreateEventDto } from "./dto/create-event.dto";
+import { UpdateEventDto } from "./dto/update-event.dto";
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectModel(Event.name)
     private readonly eventModel: Model<EventDocument>,
-    private readonly i18n: I18nService,
+    private readonly i18n: I18nService
   ) {}
 
   async create(userId: string, dto: CreateEventDto) {
@@ -28,7 +24,7 @@ export class EventService {
 
     return {
       statusCode: HttpStatus.OK,
-      message: await this.i18n.translate('common.EVENT_CREATED'),
+      message: await this.i18n.translate("common.EVENT_CREATED"),
       data,
     };
   }
@@ -36,12 +32,12 @@ export class EventService {
   async findAll(userId: string) {
     const data = await this.eventModel
       .find({ userId: new Types.ObjectId(userId) })
-      .populate('userId', '-password')
+      .populate("userId", "-password")
       .sort({ createdAt: -1 });
 
     return {
       statusCode: HttpStatus.OK,
-      message: await this.i18n.translate('common.EVENTS_FETCHED'),
+      message: await this.i18n.translate("common.EVENTS_FETCHED"),
       data,
     };
   }
@@ -52,17 +48,17 @@ export class EventService {
         _id: new Types.ObjectId(eventId),
         userId: new Types.ObjectId(userId),
       })
-      .populate('userId', '-password');
+      .populate("userId", "-password");
 
     if (!event) {
       throw new NotFoundException(
-        await this.i18n.translate('common.EVENT_NOT_FOUND'),
+        await this.i18n.translate("common.EVENT_NOT_FOUND")
       );
     }
 
     return {
       statusCode: HttpStatus.OK,
-      message: await this.i18n.translate('common.EVENT_DETAILS_FETCHED'),
+      message: await this.i18n.translate("common.EVENT_DETAILS_FETCHED"),
       data: event,
     };
   }
@@ -75,13 +71,13 @@ export class EventService {
 
     if (!event) {
       throw new NotFoundException(
-        await this.i18n.translate('common.EVENT_NOT_FOUND'),
+        await this.i18n.translate("common.EVENT_NOT_FOUND")
       );
     }
 
     return {
       statusCode: HttpStatus.OK,
-      message: await this.i18n.translate('common.DATA_FETCHED'),
+      message: await this.i18n.translate("common.DATA_FETCHED"),
       data: event,
     };
   }
@@ -92,13 +88,60 @@ export class EventService {
 
     if (!event) {
       throw new NotFoundException(
-        await this.i18n.translate('common.EVENT_NOT_FOUND'),
+        await this.i18n.translate("common.EVENT_NOT_FOUND")
       );
     }
 
     return {
       statusCode: HttpStatus.OK,
-      message: await this.i18n.translate('common.EVENT_DELETED'),
+      message: await this.i18n.translate("common.EVENT_DELETED"),
+    };
+  }
+
+  // UPDATE EVENT
+  async updateEvent(userId: string, eventId: string, dto: UpdateEventDto) {
+    const event = await this.eventModel.findOneAndUpdate(
+      {
+        _id: new Types.ObjectId(eventId),
+        userId: new Types.ObjectId(userId),
+      },
+      {
+        ...dto,
+        ...(dto.date && { date: new Date(dto.date) }),
+      },
+      { new: true }
+    );
+
+    if (!event) {
+      throw new NotFoundException(
+        await this.i18n.translate("common.EVENT_NOT_FOUND")
+      );
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: await this.i18n.translate("common.EVENT_UPDATED"),
+      data: event,
+    };
+  }
+
+  // DELETE EVENT
+  async deleteEvent(userId: string, eventId: string) {
+    const event = await this.eventModel.findOneAndDelete({
+      _id: new Types.ObjectId(eventId),
+      userId: new Types.ObjectId(userId),
+    });
+
+    if (!event) {
+      throw new NotFoundException(
+        await this.i18n.translate("common.EVENT_NOT_FOUND")
+      );
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: await this.i18n.translate("common.EVENT_DELETED"),
+      data:[]
     };
   }
 }

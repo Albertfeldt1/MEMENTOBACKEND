@@ -31,18 +31,18 @@ let EventService = class EventService {
         });
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: await this.i18n.translate('common.EVENT_CREATED'),
+            message: await this.i18n.translate("common.EVENT_CREATED"),
             data,
         };
     }
     async findAll(userId) {
         const data = await this.eventModel
             .find({ userId: new mongoose_2.Types.ObjectId(userId) })
-            .populate('userId', '-password')
+            .populate("userId", "-password")
             .sort({ createdAt: -1 });
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: await this.i18n.translate('common.EVENTS_FETCHED'),
+            message: await this.i18n.translate("common.EVENTS_FETCHED"),
             data,
         };
     }
@@ -52,13 +52,13 @@ let EventService = class EventService {
             _id: new mongoose_2.Types.ObjectId(eventId),
             userId: new mongoose_2.Types.ObjectId(userId),
         })
-            .populate('userId', '-password');
+            .populate("userId", "-password");
         if (!event) {
-            throw new common_1.NotFoundException(await this.i18n.translate('common.EVENT_NOT_FOUND'));
+            throw new common_1.NotFoundException(await this.i18n.translate("common.EVENT_NOT_FOUND"));
         }
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: await this.i18n.translate('common.EVENT_DETAILS_FETCHED'),
+            message: await this.i18n.translate("common.EVENT_DETAILS_FETCHED"),
             data: event,
         };
     }
@@ -67,22 +67,53 @@ let EventService = class EventService {
             new: true,
         });
         if (!event) {
-            throw new common_1.NotFoundException(await this.i18n.translate('common.EVENT_NOT_FOUND'));
+            throw new common_1.NotFoundException(await this.i18n.translate("common.EVENT_NOT_FOUND"));
         }
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: await this.i18n.translate('common.DATA_FETCHED'),
+            message: await this.i18n.translate("common.DATA_FETCHED"),
             data: event,
         };
     }
     async delete(id) {
         const event = await this.eventModel.findByIdAndDelete(id);
         if (!event) {
-            throw new common_1.NotFoundException(await this.i18n.translate('common.EVENT_NOT_FOUND'));
+            throw new common_1.NotFoundException(await this.i18n.translate("common.EVENT_NOT_FOUND"));
         }
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: await this.i18n.translate('common.EVENT_DELETED'),
+            message: await this.i18n.translate("common.EVENT_DELETED"),
+        };
+    }
+    async updateEvent(userId, eventId, dto) {
+        const event = await this.eventModel.findOneAndUpdate({
+            _id: new mongoose_2.Types.ObjectId(eventId),
+            userId: new mongoose_2.Types.ObjectId(userId),
+        }, {
+            ...dto,
+            ...(dto.date && { date: new Date(dto.date) }),
+        }, { new: true });
+        if (!event) {
+            throw new common_1.NotFoundException(await this.i18n.translate("common.EVENT_NOT_FOUND"));
+        }
+        return {
+            statusCode: common_1.HttpStatus.OK,
+            message: await this.i18n.translate("common.EVENT_UPDATED"),
+            data: event,
+        };
+    }
+    async deleteEvent(userId, eventId) {
+        const event = await this.eventModel.findOneAndDelete({
+            _id: new mongoose_2.Types.ObjectId(eventId),
+            userId: new mongoose_2.Types.ObjectId(userId),
+        });
+        if (!event) {
+            throw new common_1.NotFoundException(await this.i18n.translate("common.EVENT_NOT_FOUND"));
+        }
+        return {
+            statusCode: common_1.HttpStatus.OK,
+            message: await this.i18n.translate("common.EVENT_DELETED"),
+            data: []
         };
     }
 };

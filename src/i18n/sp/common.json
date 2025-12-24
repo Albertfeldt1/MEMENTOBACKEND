@@ -18,9 +18,7 @@
   "USERS_FETCHED": "Los usuarios se obtuvieron correctamente.",
   "EVENT_CREATED": "El evento se creó correctamente.",
   "EVENTS_FETCHED": "Todos los eventos se obtuvieron correctamente.",
-  "EVENT_NOT_FOUND": "Evento no encontrado.",
   "EVENT_DETAILS_FETCHED": "Los detalles del evento se obtuvieron correctamente.",
-  "EVENT_DELETED": "El evento se eliminó correctamente.",
   "PLAN_BASIC": "Básico",
   "PLAN_PREMIUM": "Premium",
   "PLAN_PRO": "Pro",
@@ -46,6 +44,10 @@
   "FEATURE_COLLABORATION": "Funciones de colaboración",
   "FEATURE_CUSTOM_BRANDING": "Marca personalizada",
 
-  "SUBSCRIPTIONS_FETCHED": "Las suscripciones se obtuvieron correctamente"
+  "SUBSCRIPTIONS_FETCHED": "Las suscripciones se obtuvieron correctamente",
+
+  "EVENT_NOT_FOUND": "No pudimos encontrar este evento. Es posible que haya sido eliminado o que ya no esté disponible.",
+  "EVENT_UPDATED": "Tu evento se actualizó correctamente.",
+  "EVENT_DELETED": "Tu evento se eliminó correctamente."
 
 }

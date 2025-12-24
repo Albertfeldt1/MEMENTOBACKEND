@@ -31,6 +31,12 @@ let EventController = class EventController {
     findById(req, id) {
         return this.eventService.findById(req.user.userId, id);
     }
+    updateEvent(req, id, dto) {
+        return this.eventService.updateEvent(req.user.userId, id, dto);
+    }
+    deleteEvent(req, id) {
+        return this.eventService.deleteEvent(req.user.userId, id);
+    }
     update(id, dto) {
         return this.eventService.update(id, dto);
     }
@@ -58,30 +64,49 @@ __decorate([
 ], EventController.prototype, "findAll", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    (0, common_1.Get)('get-event-details'),
+    (0, common_1.Get)("get-event-details"),
     __param(0, (0, common_1.Request)()),
-    __param(1, (0, common_1.Query)('id')),
+    __param(1, (0, common_1.Query)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", void 0)
 ], EventController.prototype, "findById", null);
 __decorate([
-    (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Patch)("update-event"),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Query)("id")),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, update_event_dto_1.UpdateEventDto]),
+    __metadata("design:returntype", void 0)
+], EventController.prototype, "updateEvent", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Delete)("delete-event"),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Query)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", void 0)
+], EventController.prototype, "deleteEvent", null);
+__decorate([
+    (0, common_1.Patch)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, update_event_dto_1.UpdateEventDto]),
     __metadata("design:returntype", void 0)
 ], EventController.prototype, "update", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Delete)(":id"),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], EventController.prototype, "delete", null);
 exports.EventController = EventController = __decorate([
-    (0, common_1.Controller)('events'),
+    (0, common_1.Controller)("events"),
     __metadata("design:paramtypes", [event_service_1.EventService])
 ], EventController);
 //# sourceMappingURL=event.controller.js.map

@@ -18,9 +18,7 @@
   "USERS_FETCHED": "Users fetched successfully.",
   "EVENT_CREATED": "Event created successfully.",
   "EVENTS_FETCHED": "All events fetched successfully.",
-  "EVENT_NOT_FOUND": "Event not found.",
   "EVENT_DETAILS_FETCHED": "Event details fetched successfully.",
-  "EVENT_DELETED": "Event deleted successfully.",
 
   "PLAN_BASIC": "Basic",
   "PLAN_PREMIUM": "Premium",
@@ -47,5 +45,9 @@
   "FEATURE_COLLABORATION": "Collaboration features",
   "FEATURE_CUSTOM_BRANDING": "Custom branding",
 
-  "SUBSCRIPTIONS_FETCHED": "Subscriptions fetched successfully"
+  "SUBSCRIPTIONS_FETCHED": "Subscriptions fetched successfully",
+
+  "EVENT_NOT_FOUND": "We couldn’t find this event. It may have been removed or is no longer available.",
+  "EVENT_UPDATED": "Your event has been updated successfully.",
+  "EVENT_DELETED": "Your event has been deleted successfully."
 }

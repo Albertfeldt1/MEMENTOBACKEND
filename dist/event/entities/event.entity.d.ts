@@ -3,6 +3,7 @@ export type EventDocument = Event & Document;
 export declare class Event {
     userId: Types.ObjectId;
     title: string;
+    image: string;
     date: Date;
     time: string;
     location: string;

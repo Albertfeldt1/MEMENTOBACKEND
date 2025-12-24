@@ -3,4 +3,5 @@ export declare class CreateEventDto {
     date: string;
     time: string;
     location: string;
+    image: string;
 }

@@ -12,6 +12,9 @@ export class Event {
   @Prop({ required: true, trim: true })
   title: string;
 
+  @Prop({ trim: true })
+  image: string;
+
   @Prop({ required: true })
   date: Date;
 

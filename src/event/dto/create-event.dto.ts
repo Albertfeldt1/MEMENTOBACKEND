@@ -12,4 +12,7 @@ export class CreateEventDto {
 
   @IsString()
   location: string;
+
+  @IsString()
+  image: string;
 }
