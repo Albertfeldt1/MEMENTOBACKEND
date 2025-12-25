@@ -20,7 +20,7 @@ __decorate([
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Event.prototype, "userId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, trim: true }),
+    (0, mongoose_1.Prop)({ trim: true }),
     __metadata("design:type", String)
 ], Event.prototype, "title", void 0);
 __decorate([
@@ -28,15 +28,15 @@ __decorate([
     __metadata("design:type", String)
 ], Event.prototype, "image", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)({}),
     __metadata("design:type", Date)
 ], Event.prototype, "date", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
+    (0, mongoose_1.Prop)({}),
     __metadata("design:type", String)
 ], Event.prototype, "time", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true, trim: true }),
+    (0, mongoose_1.Prop)({ trim: true }),
     __metadata("design:type", String)
 ], Event.prototype, "location", void 0);
 exports.Event = Event = __decorate([

@@ -9,19 +9,19 @@ export class Event {
   @Prop({type: Types.ObjectId,ref:'User'})
   userId: Types.ObjectId
 
-  @Prop({ required: true, trim: true })
+  @Prop({ trim: true })
   title: string;
 
   @Prop({ trim: true })
   image: string;
 
-  @Prop({ required: true })
+  @Prop({})
   date: Date;
 
-  @Prop({ required: true })
-  time: string; // e.g. "10:30 AM"
+  @Prop({})
+  time: string; 
 
-  @Prop({ required: true, trim: true })
+  @Prop({ trim: true })
   location: string;
 }
 
