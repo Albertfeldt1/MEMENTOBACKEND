@@ -46,7 +46,6 @@ export declare class NotificationsController {
             message: string;
             isRead: boolean;
             userId: import("mongoose").Types.ObjectId;
-            bookingId?: (import("mongoose").Types.ObjectId | null) | undefined;
             type: string;
         }> & {
             _id: import("mongoose").Types.ObjectId;

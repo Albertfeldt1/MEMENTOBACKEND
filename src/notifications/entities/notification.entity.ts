@@ -17,9 +17,6 @@ export class Notification {
 
   @Prop({ type: Types.ObjectId, ref: 'User' })
   userId: Types.ObjectId;
-
-  @Prop({ type: Types.ObjectId, ref: 'Booking', default: null })
-  bookingId?: Types.ObjectId | null;
   
   @Prop()
   type:string

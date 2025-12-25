@@ -51,7 +51,6 @@ export declare class NotificationsServices {
             message: string;
             isRead: boolean;
             userId: Types.ObjectId;
-            bookingId?: (Types.ObjectId | null) | undefined;
             type: string;
         }> & {
             _id: Types.ObjectId;

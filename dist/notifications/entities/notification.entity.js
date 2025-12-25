@@ -32,10 +32,6 @@ __decorate([
     __metadata("design:type", mongoose_2.Types.ObjectId)
 ], Notification.prototype, "userId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: mongoose_2.Types.ObjectId, ref: 'Booking', default: null }),
-    __metadata("design:type", Object)
-], Notification.prototype, "bookingId", void 0);
-__decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Notification.prototype, "type", void 0);

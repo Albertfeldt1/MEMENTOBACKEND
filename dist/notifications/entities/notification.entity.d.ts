@@ -5,7 +5,6 @@ export declare class Notification {
     message: string;
     isRead: boolean;
     userId: Types.ObjectId;
-    bookingId?: Types.ObjectId | null;
     type: string;
 }
 export declare const NotificationSchema: import("mongoose").Schema<Notification, import("mongoose").Model<Notification, any, any, any, Document<unknown, any, Notification, any, {}> & Notification & {

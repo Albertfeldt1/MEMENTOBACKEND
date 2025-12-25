@@ -2,21 +2,23 @@ import { Injectable } from "@nestjs/common";
 import { RemindersService } from "./reminders.service";
 import { Cron } from "@nestjs/schedule";
 import { NotificationsService } from "src/notification/notification.service";
+import { Notification } from "src/notifications/entities/notification.entity";
+import { Model, Types } from "mongoose";
+import { InjectModel } from "@nestjs/mongoose";
 @Injectable()
 export class RemindersScheduler {
   constructor(
+    @InjectModel(Notification.name) private notificationModel: Model<Notification>,
     private readonly remindersService: RemindersService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
   ) {}
 
   @Cron("* * * * *")
   async handleReminders() {
     const reminders = await this.remindersService.getDueReminders();
-    console.log("===>>>reminders",reminders)
     for (const r of reminders) {
       const token = (r.userId as any)?.device_token;
       if (!token) continue;
-        console.log("====>>>>token",token)
       console.log(`Sending ${r.type} reminder for ${(r.eventId as any).title}`);
 
       await this.notificationsService.sendPushNotification(
@@ -25,7 +27,7 @@ export class RemindersScheduler {
         `${r.type.replace("_", " ")}: ${(r.eventId as any).title}`,
         { eventId: r.eventId._id.toString() }
       );
-      
+      await this.notificationModel.create({userId:new Types.ObjectId(r.userId),title:'Event Reminder', message:`${r.type.replace("_", " ")}: ${(r.eventId as any).title}`})
       await this.remindersService.markAsSent(r._id.toString());
     }
   }

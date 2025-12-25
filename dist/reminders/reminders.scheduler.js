@@ -8,27 +8,33 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RemindersScheduler = void 0;
 const common_1 = require("@nestjs/common");
 const reminders_service_1 = require("./reminders.service");
 const schedule_1 = require("@nestjs/schedule");
 const notification_service_1 = require("../notification/notification.service");
+const notification_entity_1 = require("../notifications/entities/notification.entity");
+const mongoose_1 = require("mongoose");
+const mongoose_2 = require("@nestjs/mongoose");
 let RemindersScheduler = class RemindersScheduler {
-    constructor(remindersService, notificationsService) {
+    constructor(notificationModel, remindersService, notificationsService) {
+        this.notificationModel = notificationModel;
         this.remindersService = remindersService;
         this.notificationsService = notificationsService;
     }
     async handleReminders() {
         const reminders = await this.remindersService.getDueReminders();
-        console.log("===>>>reminders", reminders);
         for (const r of reminders) {
             const token = r.userId?.device_token;
             if (!token)
                 continue;
-            console.log("====>>>>token", token);
             console.log(`Sending ${r.type} reminder for ${r.eventId.title}`);
             await this.notificationsService.sendPushNotification(token, "Event Reminder", `${r.type.replace("_", " ")}: ${r.eventId.title}`, { eventId: r.eventId._id.toString() });
+            await this.notificationModel.create({ userId: new mongoose_1.Types.ObjectId(r.userId), title: 'Event Reminder', message: `${r.type.replace("_", " ")}: ${r.eventId.title}` });
             await this.remindersService.markAsSent(r._id.toString());
         }
     }
@@ -42,7 +48,9 @@ __decorate([
 ], RemindersScheduler.prototype, "handleReminders", null);
 exports.RemindersScheduler = RemindersScheduler = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [reminders_service_1.RemindersService,
+    __param(0, (0, mongoose_2.InjectModel)(notification_entity_1.Notification.name)),
+    __metadata("design:paramtypes", [mongoose_1.Model,
+        reminders_service_1.RemindersService,
         notification_service_1.NotificationsService])
 ], RemindersScheduler);
 //# sourceMappingURL=reminders.scheduler.js.map
