@@ -17,6 +17,8 @@ const common_1 = require("@nestjs/common");
 const notifications_service_1 = require("./notifications.service");
 const create_notification_dto_1 = require("./dto/create-notification.dto");
 const update_notification_dto_1 = require("./dto/update-notification.dto");
+class DeleteNotificationsDto {
+}
 let NotificationsController = class NotificationsController {
     constructor(notificationsService) {
         this.notificationsService = notificationsService;
@@ -24,8 +26,14 @@ let NotificationsController = class NotificationsController {
     create(createNotificationDto) {
         return this.notificationsService.create(createNotificationDto);
     }
+    async markAsRead(body) {
+        return this.notificationsService.markAsRead(body.userId, body.notificationId, body.notificationIds);
+    }
     findAll(userId) {
         return this.notificationsService.findAll(userId);
+    }
+    getAllForAdmin(page = 1, limit = 20) {
+        return this.notificationsService.getAllForAdmin(Number(page), Number(limit));
     }
     findOne(id) {
         return this.notificationsService.findOne(+id);
@@ -33,8 +41,8 @@ let NotificationsController = class NotificationsController {
     update(id, updateNotificationDto) {
         return this.notificationsService.update(+id, updateNotificationDto);
     }
-    remove(id) {
-        return this.notificationsService.remove(+id);
+    async deleteManyDelete(dto) {
+        return this.notificationsService.deleteManyForUser(dto.ids);
     }
 };
 exports.NotificationsController = NotificationsController;
@@ -46,12 +54,27 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], NotificationsController.prototype, "create", null);
 __decorate([
+    (0, common_1.Patch)('mark-read'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], NotificationsController.prototype, "markAsRead", null);
+__decorate([
     (0, common_1.Get)(),
     __param(0, (0, common_1.Query)('userId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], NotificationsController.prototype, "findAll", null);
+__decorate([
+    (0, common_1.Get)('admin/all'),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", void 0)
+], NotificationsController.prototype, "getAllForAdmin", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
@@ -68,12 +91,12 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], NotificationsController.prototype, "update", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
+    (0, common_1.Delete)('delete-many'),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], NotificationsController.prototype, "remove", null);
+    __metadata("design:paramtypes", [DeleteNotificationsDto]),
+    __metadata("design:returntype", Promise)
+], NotificationsController.prototype, "deleteManyDelete", null);
 exports.NotificationsController = NotificationsController = __decorate([
     (0, common_1.Controller)('notifications'),
     __metadata("design:paramtypes", [notifications_service_1.NotificationsServices])

@@ -18,21 +18,28 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const nestjs_i18n_1 = require("nestjs-i18n");
 const event_entity_1 = require("./entities/event.entity");
+const reminders_service_1 = require("../reminders/reminders.service");
+const notification_service_1 = require("../notification/notification.service");
 let EventService = class EventService {
-    constructor(eventModel, i18n) {
+    constructor(eventModel, i18n, notificationsService, remindersService) {
         this.eventModel = eventModel;
         this.i18n = i18n;
+        this.notificationsService = notificationsService;
+        this.remindersService = remindersService;
     }
     async create(userId, dto) {
-        const data = await this.eventModel.create({
+        const eventDay = new Date(dto.date);
+        eventDay.setHours(9, 0, 0, 0);
+        const event = await this.eventModel.create({
             userId: new mongoose_2.Types.ObjectId(userId),
             ...dto,
-            date: new Date(dto.date),
+            date: eventDay,
         });
+        await this.remindersService.createEventReminders(event._id, userId, eventDay);
         return {
             statusCode: common_1.HttpStatus.OK,
             message: await this.i18n.translate("common.EVENT_CREATED"),
-            data,
+            data: event,
         };
     }
     async findAll(userId) {
@@ -113,7 +120,7 @@ let EventService = class EventService {
         return {
             statusCode: common_1.HttpStatus.OK,
             message: await this.i18n.translate("common.EVENT_DELETED"),
-            data: []
+            data: [],
         };
     }
 };
@@ -122,6 +129,8 @@ exports.EventService = EventService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(event_entity_1.Event.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        nestjs_i18n_1.I18nService])
+        nestjs_i18n_1.I18nService,
+        notification_service_1.NotificationsService,
+        reminders_service_1.RemindersService])
 ], EventService);
 //# sourceMappingURL=event.service.js.map

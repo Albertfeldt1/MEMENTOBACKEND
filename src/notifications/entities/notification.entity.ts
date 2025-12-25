@@ -17,19 +17,13 @@ export class Notification {
 
   @Prop({ type: Types.ObjectId, ref: 'User' })
   userId: Types.ObjectId;
+
+  @Prop({ type: Types.ObjectId, ref: 'Booking', default: null })
+  bookingId?: Types.ObjectId | null;
   
-  @Prop({ type: String })
-  winningPrice: string;
-
-  @Prop({type: String})
-  winning:string
-
-  @Prop({ type: Types.ObjectId, ref: 'UserQuestionAnswer' })
-  answerId: Types.ObjectId;
-
-  
+  @Prop()
+  type:string
 
 }
 
 export const NotificationSchema = SchemaFactory.createForClass(Notification);
-

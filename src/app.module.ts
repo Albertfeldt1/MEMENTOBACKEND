@@ -21,10 +21,10 @@ import { NotificationsModules } from "./notifications/notifications.module";
 import { PagesModule } from "./pages/pages.module";
 import { EventModule } from "./event/event.module";
 import { SubscriptionModule } from "./subscription/subscription.module";
+import { RemindersModule } from './reminders/reminders.module';
 
 @Module({
   imports: [
-    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [mongodbConfig],
@@ -43,7 +43,6 @@ import { SubscriptionModule } from "./subscription/subscription.module";
       fallbackLanguage: "en",
       loader: I18nJsonLoader,
       loaderOptions: {
-        // path: path.join(__dirname, "/dist/i18n/"),
         path: path.join(__dirname, "i18n"),
         watch: true,
       },
@@ -57,6 +56,8 @@ import { SubscriptionModule } from "./subscription/subscription.module";
     PagesModule,
     EventModule,
     SubscriptionModule,
+    RemindersModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],

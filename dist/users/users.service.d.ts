@@ -14,16 +14,13 @@ export declare class UsersService {
     private notificationsService;
     private readonly i18n;
     constructor(userModel: Model<User>, jwtService: JwtService, notificationsService: NotificationsService, i18n: I18nService);
+    private sanitizeUser;
     socialLogin(body: SocialLoginDto): Promise<import("src/utility/response.helper").ResponseStructure<{
         statusCode: HttpStatus;
         message: string;
         data: {
             token: string;
-            user: import("mongoose").Document<unknown, {}, User, {}, {}> & User & Required<{
-                _id: import("mongoose").Types.ObjectId;
-            }> & {
-                __v: number;
-            };
+            user: any;
         };
     }>>;
     register(body: RegisterDto): Promise<import("src/utility/response.helper").ResponseStructure<{

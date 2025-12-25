@@ -32,11 +32,7 @@ export declare class UsersController {
         message: string;
         data: {
             token: string;
-            user: import("mongoose").Document<unknown, {}, import("./user.schema").User, {}, {}> & import("./user.schema").User & Required<{
-                _id: import("mongoose").Types.ObjectId;
-            }> & {
-                __v: number;
-            };
+            user: any;
         };
     }>>;
     uploadImage(file: Express.Multer.File): Promise<{

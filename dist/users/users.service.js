@@ -62,6 +62,12 @@ let UsersService = class UsersService {
         this.notificationsService = notificationsService;
         this.i18n = i18n;
     }
+    sanitizeUser(user) {
+        const obj = user.toObject();
+        delete obj.password;
+        delete obj.__v;
+        return obj;
+    }
     async socialLogin(body) {
         const { socialId, email, name, device_type, device_token } = body;
         let user = await this.userModel.findOne({ socialId });
@@ -76,7 +82,7 @@ let UsersService = class UsersService {
             };
             return (0, response_helper_1.handleSuccess)({
                 statusCode: common_1.HttpStatus.OK,
-                message: await this.i18n.translate("auth.LOGIN_SUCCESS"),
+                message: await this.i18n.translate("common.LOGIN_SUCCESS"),
                 data: {
                     token: this.jwtService.sign(payload),
                     user,
@@ -102,10 +108,10 @@ let UsersService = class UsersService {
                 };
                 return (0, response_helper_1.handleSuccess)({
                     statusCode: common_1.HttpStatus.OK,
-                    message: await this.i18n.translate("auth.SOCIAL_LINKED"),
+                    message: await this.i18n.translate("common.SOCIAL_LINKED"),
                     data: {
                         token: this.jwtService.sign(payload),
-                        user,
+                        user: this.sanitizeUser(user),
                     },
                 });
             }
@@ -124,7 +130,7 @@ let UsersService = class UsersService {
         };
         return (0, response_helper_1.handleSuccess)({
             statusCode: common_1.HttpStatus.CREATED,
-            message: await this.i18n.translate("auth.SOCIAL_REGISTER_SUCCESS"),
+            message: await this.i18n.translate("common.SOCIAL_REGISTER_SUCCESS"),
             data: {
                 token: this.jwtService.sign(payload),
                 user,
@@ -137,7 +143,7 @@ let UsersService = class UsersService {
             email: email.toLowerCase(),
         });
         if (existingUser) {
-            throw new common_1.ConflictException(await this.i18n.translate("auth.EMAIL_ALREADY_REGISTERED"));
+            throw new common_1.ConflictException(await this.i18n.translate("common.EMAIL_ALREADY_REGISTERED"));
         }
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = await this.userModel.create({
@@ -154,7 +160,7 @@ let UsersService = class UsersService {
         };
         return (0, response_helper_1.handleSuccess)({
             statusCode: common_1.HttpStatus.CREATED,
-            message: await this.i18n.translate("auth.REGISTER_SUCCESS"),
+            message: await this.i18n.translate("common.REGISTER_SUCCESS"),
             data: {
                 token: this.jwtService.sign(payload),
                 user,
@@ -167,11 +173,11 @@ let UsersService = class UsersService {
             email: email.toLowerCase(),
         });
         if (!user || !user.password) {
-            throw new common_1.UnauthorizedException(await this.i18n.translate("auth.INVALID_CREDENTIALS"));
+            throw new common_1.UnauthorizedException(await this.i18n.translate("common.INVALID_CREDENTIALS"));
         }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            throw new common_1.UnauthorizedException(await this.i18n.translate("auth.INVALID_CREDENTIALS"));
+            throw new common_1.UnauthorizedException(await this.i18n.translate("common.INVALID_CREDENTIALS"));
         }
         user.device_type = device_type ?? user.device_type;
         user.device_token = device_token ?? user.device_token;
@@ -183,7 +189,7 @@ let UsersService = class UsersService {
         };
         return (0, response_helper_1.handleSuccess)({
             statusCode: common_1.HttpStatus.OK,
-            message: await this.i18n.translate("auth.LOGIN_SUCCESS"),
+            message: await this.i18n.translate("common.LOGIN_SUCCESS"),
             data: {
                 token: this.jwtService.sign(payload),
                 user,

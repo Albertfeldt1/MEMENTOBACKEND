@@ -4,10 +4,14 @@ import { I18nService } from "nestjs-i18n";
 import { Event, EventDocument } from "./entities/event.entity";
 import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
+import { RemindersService } from "src/reminders/reminders.service";
+import { NotificationsService } from "src/notification/notification.service";
 export declare class EventService {
     private readonly eventModel;
     private readonly i18n;
-    constructor(eventModel: Model<EventDocument>, i18n: I18nService);
+    private notificationsService;
+    private readonly remindersService;
+    constructor(eventModel: Model<EventDocument>, i18n: I18nService, notificationsService: NotificationsService, remindersService: RemindersService);
     create(userId: string, dto: CreateEventDto): Promise<{
         statusCode: HttpStatus;
         message: string;

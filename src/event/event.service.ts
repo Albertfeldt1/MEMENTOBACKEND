@@ -7,27 +7,59 @@ import { Event, EventDocument } from "./entities/event.entity";
 import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
 
+import { User } from "src/users/user.schema";
+import { RemindersService } from "src/reminders/reminders.service";
+import { NotificationsService } from "src/notification/notification.service";
+
 @Injectable()
 export class EventService {
   constructor(
     @InjectModel(Event.name)
     private readonly eventModel: Model<EventDocument>,
-    private readonly i18n: I18nService
+    // private readonly userModel: Model<User>,
+    private readonly i18n: I18nService,
+    private notificationsService: NotificationsService,
+    private readonly remindersService: RemindersService
   ) {}
 
-  async create(userId: string, dto: CreateEventDto) {
-    const data = await this.eventModel.create({
-      userId: new Types.ObjectId(userId),
-      ...dto,
-      date: new Date(dto.date),
-    });
+  // async create(userId: string, dto: CreateEventDto) {
+  //   const data = await this.eventModel.create({
+  //     userId: new Types.ObjectId(userId),
+  //     ...dto,
+  //     date: new Date(dto.date),
+  //   });
 
-    return {
-      statusCode: HttpStatus.OK,
-      message: await this.i18n.translate("common.EVENT_CREATED"),
-      data,
-    };
-  }
+  //   return {
+  //     statusCode: HttpStatus.OK,
+  //     message: await this.i18n.translate("common.EVENT_CREATED"),
+  //     data,
+  //   };
+  // }
+
+  async create(userId: string, dto: CreateEventDto) {
+  const eventDay = new Date(dto.date);
+
+  // System default event time (example: 9 AM)
+  eventDay.setHours(9, 0, 0, 0);
+
+  const event = await this.eventModel.create({
+    userId: new Types.ObjectId(userId),
+    ...dto,
+    date: eventDay, // date+system-time
+  });
+
+  await this.remindersService.createEventReminders(
+    event._id,
+    userId,
+    eventDay
+  );
+
+  return {
+    statusCode: HttpStatus.OK,
+    message: await this.i18n.translate("common.EVENT_CREATED"),
+    data: event,
+  };
+}
 
   async findAll(userId: string) {
     const data = await this.eventModel
@@ -141,7 +173,7 @@ export class EventService {
     return {
       statusCode: HttpStatus.OK,
       message: await this.i18n.translate("common.EVENT_DELETED"),
-      data:[]
+      data: [],
     };
   }
 }

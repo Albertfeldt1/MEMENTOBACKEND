@@ -30,6 +30,14 @@ export class UsersService {
     private notificationsService: NotificationsService,
     private readonly i18n: I18nService
   ) {}
+
+  private sanitizeUser(user: any) {
+    const obj = user.toObject();
+    delete obj.password;
+    delete obj.__v;
+    return obj;
+  }
+
   async socialLogin(body: SocialLoginDto) {
     const { socialId, email, name, device_type, device_token } = body;
 
@@ -49,7 +57,7 @@ export class UsersService {
 
       return handleSuccess({
         statusCode: HttpStatus.OK,
-        message: await this.i18n.translate("auth.LOGIN_SUCCESS"),
+        message: await this.i18n.translate("common.LOGIN_SUCCESS"),
         data: {
           token: this.jwtService.sign(payload),
           user,
@@ -84,10 +92,10 @@ export class UsersService {
 
         return handleSuccess({
           statusCode: HttpStatus.OK,
-          message: await this.i18n.translate("auth.SOCIAL_LINKED"),
+          message: await this.i18n.translate("common.SOCIAL_LINKED"),
           data: {
             token: this.jwtService.sign(payload),
-            user,
+            user:this.sanitizeUser(user),
           },
         });
       }
@@ -110,7 +118,7 @@ export class UsersService {
 
     return handleSuccess({
       statusCode: HttpStatus.CREATED,
-      message: await this.i18n.translate("auth.SOCIAL_REGISTER_SUCCESS"),
+      message: await this.i18n.translate("common.SOCIAL_REGISTER_SUCCESS"),
       data: {
         token: this.jwtService.sign(payload),
         user,
@@ -127,7 +135,7 @@ export class UsersService {
 
     if (existingUser) {
       throw new ConflictException(
-        await this.i18n.translate("auth.EMAIL_ALREADY_REGISTERED")
+        await this.i18n.translate("common.EMAIL_ALREADY_REGISTERED")
       );
     }
 
@@ -149,7 +157,7 @@ export class UsersService {
 
     return handleSuccess({
       statusCode: HttpStatus.CREATED,
-      message: await this.i18n.translate("auth.REGISTER_SUCCESS"),
+      message: await this.i18n.translate("common.REGISTER_SUCCESS"),
       data: {
         token: this.jwtService.sign(payload),
         user,
@@ -166,14 +174,14 @@ export class UsersService {
 
     if (!user || !user.password) {
       throw new UnauthorizedException(
-        await this.i18n.translate("auth.INVALID_CREDENTIALS")
+        await this.i18n.translate("common.INVALID_CREDENTIALS")
       );
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new UnauthorizedException(
-        await this.i18n.translate("auth.INVALID_CREDENTIALS")
+        await this.i18n.translate("common.INVALID_CREDENTIALS")
       );
     }
 
@@ -190,7 +198,7 @@ export class UsersService {
 
     return handleSuccess({
       statusCode: HttpStatus.OK,
-      message: await this.i18n.translate("auth.LOGIN_SUCCESS"),
+      message: await this.i18n.translate("common.LOGIN_SUCCESS"),
       data: {
         token: this.jwtService.sign(payload),
         user,
@@ -318,7 +326,7 @@ export class UsersService {
     };
   }
 
-  async sendTestNotification(deviceToken:string) {
+  async sendTestNotification(deviceToken: string) {
     const title = "Test Notification";
     const body = "This notification is sent via NotificationsService";
     const data = {
