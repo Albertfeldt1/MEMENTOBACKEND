@@ -9,21 +9,24 @@ export class RemindersService {
     @InjectModel(EventReminder.name) private reminderModel: Model<EventReminder>
   ) {}
 
-  async createEventReminders(eventId, userId, eventDate) {
+  async createEventReminders(eventId, userId, eventDate: Date) {
     const reminders = [
       {
         label: "1_DAY_BEFORE",
-        fireAt: new Date(eventDate.getTime() - 86400000),
+        fireAt: new Date(eventDate.getTime() - 24 * 60 * 60 * 1000),
       },
       {
         label: "1_HOUR_BEFORE",
-        fireAt: new Date(eventDate.getTime() - 3600000),
+        fireAt: new Date(eventDate.getTime() - 60 * 60 * 1000),
       },
       {
         label: "15_MIN_BEFORE",
-        fireAt: new Date(eventDate.getTime() - 900000),
+        fireAt: new Date(eventDate.getTime() - 15 * 60 * 1000),
       },
-      { label: "ON_EVENT", fireAt: eventDate },
+      {
+        label: "ON_EVENT",
+        fireAt: eventDate,
+      },
     ];
 
     return this.reminderModel.insertMany(
@@ -43,8 +46,7 @@ export class RemindersService {
         fireAt: { $lte: new Date() },
         isSent: false,
       })
-      .populate("eventId")
-      .populate("userId");
+      .populate("eventId userId");
   }
 
   async markAsSent(id: string) {

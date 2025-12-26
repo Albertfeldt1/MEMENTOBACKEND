@@ -16,37 +16,38 @@ export class EventService {
   constructor(
     @InjectModel(Event.name)
     private readonly eventModel: Model<EventDocument>,
-    // private readonly userModel: Model<User>,
     private readonly i18n: I18nService,
     private notificationsService: NotificationsService,
     private readonly remindersService: RemindersService
   ) {}
 
-
   async create(userId: string, dto: CreateEventDto) {
-  const eventDay = new Date(dto.date);
+    // Combine date + time
+    const eventDateTime = new Date(dto.date);
+    const [hours, minutes] = dto.time.split(":").map(Number);
+    eventDateTime.setHours(hours, minutes, 0, 0);
 
-  // System default event time (example: 9 AM)
-  eventDay.setHours(9, 0, 0, 0);
+    const event = await this.eventModel.create({
+      userId: new Types.ObjectId(userId),
+      title: dto.title,
+      image: dto.image,
+      date: eventDateTime, // ✅ exact datetime
+      time: dto.time,
+      location: dto.location,
+    });
 
-  const event = await this.eventModel.create({
-    userId: new Types.ObjectId(userId),
-    ...dto,
-    date: eventDay, // date+system-time
-  });
+    await this.remindersService.createEventReminders(
+      event._id,
+      userId,
+      eventDateTime
+    );
 
-  await this.remindersService.createEventReminders(
-    event._id,
-    userId,
-    eventDay
-  );
-
-  return {
-    statusCode: HttpStatus.OK,
-    message: await this.i18n.translate("common.EVENT_CREATED"),
-    data: event,
-  };
-}
+    return {
+      statusCode: HttpStatus.OK,
+      message: "Event created successfully",
+      data: event,
+    };
+  }
 
   async findAll(userId: string) {
     const data = await this.eventModel

@@ -28,17 +28,21 @@ let EventService = class EventService {
         this.remindersService = remindersService;
     }
     async create(userId, dto) {
-        const eventDay = new Date(dto.date);
-        eventDay.setHours(9, 0, 0, 0);
+        const eventDateTime = new Date(dto.date);
+        const [hours, minutes] = dto.time.split(":").map(Number);
+        eventDateTime.setHours(hours, minutes, 0, 0);
         const event = await this.eventModel.create({
             userId: new mongoose_2.Types.ObjectId(userId),
-            ...dto,
-            date: eventDay,
+            title: dto.title,
+            image: dto.image,
+            date: eventDateTime,
+            time: dto.time,
+            location: dto.location,
         });
-        await this.remindersService.createEventReminders(event._id, userId, eventDay);
+        await this.remindersService.createEventReminders(event._id, userId, eventDateTime);
         return {
             statusCode: common_1.HttpStatus.OK,
-            message: await this.i18n.translate("common.EVENT_CREATED"),
+            message: "Event created successfully",
             data: event,
         };
     }
