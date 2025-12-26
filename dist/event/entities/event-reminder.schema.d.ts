@@ -5,6 +5,7 @@ export declare class EventReminder {
     fireAt: Date;
     isSent: boolean;
     type: string;
+    isProcessing: boolean;
 }
 export declare const EventReminderSchema: import("mongoose").Schema<EventReminder, import("mongoose").Model<EventReminder, any, any, any, Document<unknown, any, EventReminder, any, {}> & EventReminder & {
     _id: Types.ObjectId;

@@ -18,6 +18,6 @@ export declare class RemindersService {
         _id: Types.ObjectId;
     } & {
         __v: number;
-    })[]>;
+    }) | null>;
     markAsSent(id: string): Promise<import("mongoose").UpdateWriteOpResult>;
 }

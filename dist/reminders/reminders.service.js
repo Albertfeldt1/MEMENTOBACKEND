@@ -50,9 +50,14 @@ let RemindersService = class RemindersService {
     }
     async getDueReminders() {
         return this.reminderModel
-            .find({
+            .findOneAndUpdate({
             fireAt: { $lte: new Date() },
             isSent: false,
+            isProcessing: false,
+        }, {
+            $set: { isProcessing: true },
+        }, {
+            new: true,
         })
             .populate("eventId userId");
     }

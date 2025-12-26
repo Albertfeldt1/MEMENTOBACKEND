@@ -27,21 +27,28 @@ let RemindersScheduler = class RemindersScheduler {
         this.notificationsService = notificationsService;
     }
     async handleReminders() {
-        const reminders = await this.remindersService.getDueReminders();
-        for (const r of reminders) {
+        while (true) {
+            const r = await this.remindersService.getDueReminders();
+            if (!r)
+                break;
             const token = r.userId?.device_token;
-            if (!token)
+            if (!token) {
+                await this.remindersService.markAsSent(r._id.toString());
                 continue;
-            console.log(`Sending ${r.type} reminder for ${r.eventId.title}`);
-            await this.notificationsService.sendPushNotification(token, "Event Reminder", `${r.type.replace("_", " ")}: ${r.eventId.title}`, { eventId: r.eventId._id.toString() });
-            await this.notificationModel.create({ userId: new mongoose_1.Types.ObjectId(r.userId), title: 'Event Reminder', message: `${r.type.replace("_", " ")}: ${r.eventId.title}` });
+            }
+            await this.notificationsService.sendPushNotification(token, 'Event Reminder', `${r.type.replace('_', ' ')}: ${r.eventId.title}`, { eventId: r.eventId._id.toString() });
+            await this.notificationModel.create({
+                userId: r.userId,
+                title: 'Event Reminder',
+                message: `${r.type.replace('_', ' ')}: ${r.eventId.title}`,
+            });
             await this.remindersService.markAsSent(r._id.toString());
         }
     }
 };
 exports.RemindersScheduler = RemindersScheduler;
 __decorate([
-    (0, schedule_1.Cron)("* * * * *"),
+    (0, schedule_1.Cron)('* * * * *'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)

@@ -42,10 +42,19 @@ export class RemindersService {
 
   async getDueReminders() {
     return this.reminderModel
-      .find({
-        fireAt: { $lte: new Date() },
-        isSent: false,
-      })
+      .findOneAndUpdate(
+        {
+          fireAt: { $lte: new Date() },
+          isSent: false,
+          isProcessing: false,
+        },
+        {
+          $set: { isProcessing: true },
+        },
+        {
+          new: true,
+        }
+      )
       .populate("eventId userId");
   }
 

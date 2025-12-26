@@ -35,6 +35,10 @@ __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], EventReminder.prototype, "type", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: false }),
+    __metadata("design:type", Boolean)
+], EventReminder.prototype, "isProcessing", void 0);
 exports.EventReminder = EventReminder = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], EventReminder);

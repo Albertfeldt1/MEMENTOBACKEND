@@ -16,5 +16,9 @@ export class EventReminder {
 
   @Prop()
   type: string; // "1_month", "1_week", "1_day", "1_hour", "1_min"
+
+  @Prop({ default: false })
+  isProcessing: boolean;
+
 }
 export const EventReminderSchema = SchemaFactory.createForClass(EventReminder);
