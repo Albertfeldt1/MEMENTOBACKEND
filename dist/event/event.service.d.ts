@@ -13,7 +13,7 @@ export declare class EventService {
     private readonly remindersService;
     constructor(eventModel: Model<EventDocument>, i18n: I18nService, notificationsService: NotificationsService, remindersService: RemindersService);
     create(userId: string, dto: CreateEventDto): Promise<{
-        statusCode: HttpStatus;
+        statusCode: number;
         message: string;
         data: import("mongoose").Document<unknown, {}, EventDocument, {}, {}> & Event & import("mongoose").Document<Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
             _id: Types.ObjectId;

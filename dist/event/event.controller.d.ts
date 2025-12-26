@@ -5,7 +5,7 @@ export declare class EventController {
     private readonly eventService;
     constructor(eventService: EventService);
     create(req: any, dto: CreateEventDto): Promise<{
-        statusCode: import("@nestjs/common").HttpStatus;
+        statusCode: number;
         message: string;
         data: import("mongoose").Document<unknown, {}, import("./entities/event.entity").EventDocument, {}, {}> & import("./entities/event.entity").Event & import("mongoose").Document<import("mongoose").Types.ObjectId, any, any, Record<string, any>, {}> & Required<{
             _id: import("mongoose").Types.ObjectId;

@@ -22,6 +22,7 @@ let RemindersService = class RemindersService {
         this.reminderModel = reminderModel;
     }
     async createEventReminders(eventId, userId, eventDate) {
+        const now = new Date();
         const reminders = [
             {
                 label: "1_DAY_BEFORE",
@@ -40,12 +41,16 @@ let RemindersService = class RemindersService {
                 fireAt: eventDate,
             },
         ];
-        return this.reminderModel.insertMany(reminders.map((r) => ({
+        const validReminders = reminders.filter((r) => r.fireAt > now);
+        if (!validReminders.length)
+            return [];
+        return this.reminderModel.insertMany(validReminders.map((r) => ({
             eventId,
             userId,
             type: r.label,
             fireAt: r.fireAt,
             isSent: false,
+            isProcessing: false,
         })));
     }
     async getDueReminders() {

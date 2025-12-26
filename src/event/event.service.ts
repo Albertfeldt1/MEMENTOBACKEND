@@ -22,16 +22,19 @@ export class EventService {
   ) {}
 
   async create(userId: string, dto: CreateEventDto) {
-    // Combine date + time
-    const eventDateTime = new Date(dto.date);
+    // 1️⃣ Parse date + time as IST
     const [hours, minutes] = dto.time.split(":").map(Number);
-    eventDateTime.setHours(hours, minutes, 0, 0);
+    const istDate = new Date(dto.date);
+    istDate.setHours(hours, minutes, 0, 0);
+
+    // 2️⃣ Convert IST → UTC
+    const utcDate = new Date(istDate.getTime() - 5.5 * 60 * 60 * 1000);
 
     const event = await this.eventModel.create({
       userId: new Types.ObjectId(userId),
       title: dto.title,
       image: dto.image,
-      date: eventDateTime, // ✅ exact datetime
+      date: utcDate, // ✅ stored in UTC
       time: dto.time,
       location: dto.location,
     });
@@ -39,11 +42,11 @@ export class EventService {
     await this.remindersService.createEventReminders(
       event._id,
       userId,
-      eventDateTime
+      utcDate
     );
 
     return {
-      statusCode: HttpStatus.OK,
+      statusCode: 200,
       message: "Event created successfully",
       data: event,
     };

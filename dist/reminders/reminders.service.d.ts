@@ -13,6 +13,7 @@ export declare class RemindersService {
         type: string;
         fireAt: Date;
         isSent: false;
+        isProcessing: false;
     }, "_id">>[]>;
     getDueReminders(): Promise<(import("mongoose").Document<unknown, {}, EventReminder, {}, {}> & EventReminder & {
         _id: Types.ObjectId;
