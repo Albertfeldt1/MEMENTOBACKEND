@@ -18,10 +18,10 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.use("/stripe/webhook", bodyParser.raw({ type: "application/json" }));
+  app.use('/webhook/stripe', bodyParser.raw({ type: 'application/json' }));
   app.use(I18nMiddleware);
   // app.use('/webhook', bodyParser.raw({ type: '*/*' }));
-  app.use(bodyParser.json());
+  // app.use(bodyParser.json());
   app.setViewEngine("ejs");
   // app.use(fileUpload());
   app.setBaseViewsDir(join(__dirname, "..", "views"));

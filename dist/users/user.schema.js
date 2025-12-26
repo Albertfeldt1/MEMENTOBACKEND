@@ -67,6 +67,26 @@ __decorate([
     (0, mongoose_1.Prop)({ default: null }),
     __metadata("design:type", String)
 ], User.prototype, "stripeCustomerId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String }),
+    __metadata("design:type", String)
+], User.prototype, "stripeSubscriptionId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String }),
+    __metadata("design:type", String)
+], User.prototype, "subscriptionPlan", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", Date)
+], User.prototype, "startSubscriptionDate", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", Date)
+], User.prototype, "endSubscriptionDate", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: null }),
+    __metadata("design:type", String)
+], User.prototype, "subscriptionStatus", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], User);

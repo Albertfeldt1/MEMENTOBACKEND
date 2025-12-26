@@ -1,9 +1,16 @@
-import { CreateWebhookDto } from './dto/create-webhook.dto';
-import { UpdateWebhookDto } from './dto/update-webhook.dto';
+import { Model } from "mongoose";
+import { User } from "src/users/user.schema";
+import { NotificationsService } from "src/notification/notification.service";
+import { Notification } from "src/notifications/entities/notification.entity";
 export declare class WebhookService {
-    create(createWebhookDto: CreateWebhookDto): string;
-    findAll(): string;
-    findOne(id: number): string;
-    update(id: number, updateWebhookDto: UpdateWebhookDto): string;
-    remove(id: number): string;
+    private userModel;
+    private notificationModel;
+    private notificationsService;
+    private stripe;
+    constructor(userModel: Model<User>, notificationModel: Model<Notification>, notificationsService: NotificationsService);
+    handleStripeWebhook(signature: string, rawBody: Buffer): Promise<void>;
+    private checkoutCompleted;
+    private paymentSucceeded;
+    private paymentFailed;
+    private subscriptionCancelled;
 }

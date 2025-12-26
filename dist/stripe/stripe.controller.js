@@ -30,7 +30,7 @@ let StripeController = class StripeController {
         return response;
     }
     async createPrice(body) {
-        const data = await this.stripeService.createPrice(body.planName, body.amount, body.interval, body.description);
+        const data = await this.stripeService.createPrice(body.planName, body.amount, body.interval, body.description, body.stripeCustomerId, body.startSubscriptionDate, body.endSubscriptionDate, body.subscriptionPlan);
         const response = {
             statusCode: common_1.HttpStatus?.OK,
             message: "Price Created successfully",

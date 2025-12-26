@@ -51,9 +51,8 @@ async function bootstrap() {
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true,
     });
-    app.use("/stripe/webhook", bodyParser.raw({ type: "application/json" }));
+    app.use('/webhook/stripe', bodyParser.raw({ type: 'application/json' }));
     app.use(nestjs_i18n_1.I18nMiddleware);
-    app.use(bodyParser.json());
     app.setViewEngine("ejs");
     app.setBaseViewsDir((0, path_1.join)(__dirname, "..", "views"));
     app.useStaticAssets((0, path_1.join)(__dirname, "..", "uploads"), {

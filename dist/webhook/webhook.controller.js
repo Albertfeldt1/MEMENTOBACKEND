@@ -15,64 +15,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WebhookController = void 0;
 const common_1 = require("@nestjs/common");
 const webhook_service_1 = require("./webhook.service");
-const create_webhook_dto_1 = require("./dto/create-webhook.dto");
-const update_webhook_dto_1 = require("./dto/update-webhook.dto");
 let WebhookController = class WebhookController {
     constructor(webhookService) {
         this.webhookService = webhookService;
     }
-    create(createWebhookDto) {
-        return this.webhookService.create(createWebhookDto);
-    }
-    findAll() {
-        return this.webhookService.findAll();
-    }
-    findOne(id) {
-        return this.webhookService.findOne(+id);
-    }
-    update(id, updateWebhookDto) {
-        return this.webhookService.update(+id, updateWebhookDto);
-    }
-    remove(id) {
-        return this.webhookService.remove(+id);
+    async handleStripeWebhook(req, res, signature) {
+        try {
+            console.log(req.body, '====>>body');
+            const result = await this.webhookService.handleStripeWebhook(signature, req.body);
+            return res.status(200).json(result);
+        }
+        catch (err) {
+            return res.status(400).send(err.message);
+        }
     }
 };
 exports.WebhookController = WebhookController;
 __decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.Post)('stripe'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)()),
+    __param(2, (0, common_1.Headers)('stripe-signature')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_webhook_dto_1.CreateWebhookDto]),
-    __metadata("design:returntype", void 0)
-], WebhookController.prototype, "create", null);
-__decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], WebhookController.prototype, "findAll", null);
-__decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], WebhookController.prototype, "findOne", null);
-__decorate([
-    (0, common_1.Patch)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, update_webhook_dto_1.UpdateWebhookDto]),
-    __metadata("design:returntype", void 0)
-], WebhookController.prototype, "update", null);
-__decorate([
-    (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", void 0)
-], WebhookController.prototype, "remove", null);
+    __metadata("design:paramtypes", [Object, Object, String]),
+    __metadata("design:returntype", Promise)
+], WebhookController.prototype, "handleStripeWebhook", null);
 exports.WebhookController = WebhookController = __decorate([
     (0, common_1.Controller)('webhook'),
     __metadata("design:paramtypes", [webhook_service_1.WebhookService])

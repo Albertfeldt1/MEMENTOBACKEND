@@ -41,15 +41,18 @@ export class StripeService {
     planName: string,
     amount: number,
     interval: "month" | "year",
-    description?: string
+    description?: string,
+    stripeCustomerId?:string,
+    startSubscriptionDate?:string,
+    endSubscriptionDate?:string,
+    subscriptionPlan?:string
   ) {
     const product = await this.stripe.products.create({
       name: planName,
       description,
     });
-
+    await this.userModel.findOneAndUpdate({stripeCustomerId},{$set:{startSubscriptionDate,endSubscriptionDate,subscriptionPlan}},{new:true})
     const unitAmount = Math.round(amount * 100); // 👈 FIX
-
     return this.stripe.prices.create({
       product: product.id,
       unit_amount: unitAmount,

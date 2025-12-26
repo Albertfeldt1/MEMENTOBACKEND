@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { IsDate, IsNotEmpty, IsString } from "class-validator";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 @Schema({ timestamps: true })
 export class User extends Document {
@@ -42,6 +42,21 @@ export class User extends Document {
 
   @Prop({ default: null })
   stripeCustomerId?: string;
+
+  @Prop({ type: String })
+  stripeSubscriptionId?: string;
+
+  @Prop({type: String})
+  subscriptionPlan?:string;
+
+  @Prop()
+  startSubscriptionDate?: Date;
+
+  @Prop()
+  endSubscriptionDate?: Date;
+
+  @Prop({ default: null })
+  subscriptionStatus?: "active" | "past_due" | "cancelled";
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -43,11 +43,12 @@ let StripeService = class StripeService {
     async createProduct(name, description) {
         return this.stripe.products.create({ name, description });
     }
-    async createPrice(planName, amount, interval, description) {
+    async createPrice(planName, amount, interval, description, stripeCustomerId, startSubscriptionDate, endSubscriptionDate, subscriptionPlan) {
         const product = await this.stripe.products.create({
             name: planName,
             description,
         });
+        await this.userModel.findOneAndUpdate({ stripeCustomerId }, { $set: { startSubscriptionDate, endSubscriptionDate, subscriptionPlan } }, { new: true });
         const unitAmount = Math.round(amount * 100);
         return this.stripe.prices.create({
             product: product.id,

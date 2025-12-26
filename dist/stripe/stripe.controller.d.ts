@@ -16,6 +16,10 @@ export declare class StripeController {
         amount: number;
         interval: "month" | "year";
         description: string;
+        stripeCustomerId: string;
+        startSubscriptionDate: string;
+        endSubscriptionDate: string;
+        subscriptionPlan: string;
     }): Promise<{
         statusCode: HttpStatus;
         message: string;
