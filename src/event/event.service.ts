@@ -22,19 +22,6 @@ export class EventService {
     private readonly remindersService: RemindersService
   ) {}
 
-  // async create(userId: string, dto: CreateEventDto) {
-  //   const data = await this.eventModel.create({
-  //     userId: new Types.ObjectId(userId),
-  //     ...dto,
-  //     date: new Date(dto.date),
-  //   });
-
-  //   return {
-  //     statusCode: HttpStatus.OK,
-  //     message: await this.i18n.translate("common.EVENT_CREATED"),
-  //     data,
-  //   };
-  // }
 
   async create(userId: string, dto: CreateEventDto) {
   const eventDay = new Date(dto.date);

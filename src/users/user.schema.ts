@@ -39,6 +39,9 @@ export class User extends Document {
 
   @Prop({ default: true })
   isDeleted: boolean;
+
+  @Prop({ default: null })
+  stripeCustomerId?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

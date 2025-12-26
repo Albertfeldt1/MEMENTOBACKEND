@@ -22,6 +22,7 @@ import { PagesModule } from "./pages/pages.module";
 import { EventModule } from "./event/event.module";
 import { SubscriptionModule } from "./subscription/subscription.module";
 import { RemindersModule } from './reminders/reminders.module';
+import { StripeModule } from './stripe/stripe.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { RemindersModule } from './reminders/reminders.module';
     SubscriptionModule,
     RemindersModule,
     ScheduleModule.forRoot(),
+    StripeModule,
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],
