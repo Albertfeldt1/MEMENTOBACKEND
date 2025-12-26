@@ -7,6 +7,7 @@ import { UpdateEventDto } from "./dto/update-event.dto";
 import { User } from "src/users/user.schema";
 import { RemindersService } from "src/reminders/reminders.service";
 import { NotificationsService } from "src/notification/notification.service";
+import { Notification } from "src/notifications/entities/notification.entity";
 export declare class EventService {
     private readonly eventModel;
     private notificationModel;

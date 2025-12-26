@@ -21,6 +21,7 @@ const event_entity_1 = require("./entities/event.entity");
 const user_schema_1 = require("../users/user.schema");
 const reminders_service_1 = require("../reminders/reminders.service");
 const notification_service_1 = require("../notification/notification.service");
+const notification_entity_1 = require("../notifications/entities/notification.entity");
 let EventService = class EventService {
     constructor(eventModel, notificationModel, userModel, i18n, notificationsService, remindersService) {
         this.eventModel = eventModel;
@@ -147,7 +148,7 @@ exports.EventService = EventService;
 exports.EventService = EventService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(event_entity_1.Event.name)),
-    __param(1, (0, mongoose_1.InjectModel)(Notification.name)),
+    __param(1, (0, mongoose_1.InjectModel)(notification_entity_1.Notification.name)),
     __param(2, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
         mongoose_2.Model,
