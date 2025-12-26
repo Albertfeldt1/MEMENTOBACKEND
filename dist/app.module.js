@@ -64,6 +64,7 @@ const event_module_1 = require("./event/event.module");
 const subscription_module_1 = require("./subscription/subscription.module");
 const reminders_module_1 = require("./reminders/reminders.module");
 const stripe_module_1 = require("./stripe/stripe.module");
+const webhook_module_1 = require("./webhook/webhook.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -104,6 +105,7 @@ exports.AppModule = AppModule = __decorate([
             reminders_module_1.RemindersModule,
             schedule_1.ScheduleModule.forRoot(),
             stripe_module_1.StripeModule,
+            webhook_module_1.WebhookModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService, chat_gateway_1.ChatGateway],

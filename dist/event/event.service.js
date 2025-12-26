@@ -18,11 +18,14 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const nestjs_i18n_1 = require("nestjs-i18n");
 const event_entity_1 = require("./entities/event.entity");
+const user_schema_1 = require("../users/user.schema");
 const reminders_service_1 = require("../reminders/reminders.service");
 const notification_service_1 = require("../notification/notification.service");
 let EventService = class EventService {
-    constructor(eventModel, i18n, notificationsService, remindersService) {
+    constructor(eventModel, notificationModel, userModel, i18n, notificationsService, remindersService) {
         this.eventModel = eventModel;
+        this.notificationModel = notificationModel;
+        this.userModel = userModel;
         this.i18n = i18n;
         this.notificationsService = notificationsService;
         this.remindersService = remindersService;
@@ -39,6 +42,17 @@ let EventService = class EventService {
             date: utcDate,
             time: dto.time,
             location: dto.location,
+        });
+        const userData = await this.userModel.findById(userId);
+        if (!userData) {
+            throw new common_1.NotFoundException('User Not Found');
+        }
+        const token = userData?.device_token;
+        await this.notificationsService.sendPushNotification(token, "Event Reminder", `New Event created`);
+        await this.notificationModel.create({
+            userId: new mongoose_2.Types.ObjectId(userId),
+            title: "Event Reminder",
+            message: `New Event Created`,
         });
         await this.remindersService.createEventReminders(event._id, userId, utcDate);
         return {
@@ -133,7 +147,11 @@ exports.EventService = EventService;
 exports.EventService = EventService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(event_entity_1.Event.name)),
+    __param(1, (0, mongoose_1.InjectModel)(Notification.name)),
+    __param(2, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
+        mongoose_2.Model,
+        mongoose_2.Model,
         nestjs_i18n_1.I18nService,
         notification_service_1.NotificationsService,
         reminders_service_1.RemindersService])

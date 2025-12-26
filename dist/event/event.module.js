@@ -16,6 +16,7 @@ const event_controller_1 = require("./event.controller");
 const event_entity_1 = require("./entities/event.entity");
 const notification_module_1 = require("../notification/notification.module");
 const user_schema_1 = require("../users/user.schema");
+const notification_entity_1 = require("../notifications/entities/notification.entity");
 let EventModule = class EventModule {
 };
 exports.EventModule = EventModule;
@@ -25,6 +26,7 @@ exports.EventModule = EventModule = __decorate([
             mongoose_1.MongooseModule.forFeature([
                 { name: event_entity_1.Event.name, schema: event_entity_1.EventSchema },
                 { name: user_schema_1.User.name, schema: user_schema_1.UserSchema },
+                { name: notification_entity_1.Notification.name, schema: notification_entity_1.NotificationSchema },
             ]),
             jwt_1.JwtModule.register({
                 secret: "your-secret-key",

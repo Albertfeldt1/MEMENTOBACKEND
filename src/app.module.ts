@@ -23,6 +23,7 @@ import { EventModule } from "./event/event.module";
 import { SubscriptionModule } from "./subscription/subscription.module";
 import { RemindersModule } from './reminders/reminders.module';
 import { StripeModule } from './stripe/stripe.module';
+import { WebhookModule } from './webhook/webhook.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { StripeModule } from './stripe/stripe.module';
     RemindersModule,
     ScheduleModule.forRoot(),
     StripeModule,
+    WebhookModule,
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],

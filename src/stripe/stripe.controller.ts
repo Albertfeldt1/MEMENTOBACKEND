@@ -29,7 +29,6 @@ export class StripeController {
     }
     return response;
   }
-
   // Admin: Create Stripe Price
   @Post("price")
   async createPrice(

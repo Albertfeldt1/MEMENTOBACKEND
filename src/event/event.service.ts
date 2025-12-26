@@ -16,6 +16,10 @@ export class EventService {
   constructor(
     @InjectModel(Event.name)
     private readonly eventModel: Model<EventDocument>,
+    @InjectModel(Notification.name)
+    private notificationModel: Model<Notification>,
+    @InjectModel(User.name)
+    private userModel: Model<User>,
     private readonly i18n: I18nService,
     private notificationsService: NotificationsService,
     private readonly remindersService: RemindersService
@@ -37,6 +41,23 @@ export class EventService {
       date: utcDate, // ✅ stored in UTC
       time: dto.time,
       location: dto.location,
+    });
+    const userData = await this.userModel.findById(userId)
+    if(!userData)
+    {
+      throw new NotFoundException('User Not Found')
+    }
+    const token = userData?.device_token
+    await this.notificationsService.sendPushNotification(
+      token as any,
+      "Event Reminder",
+      `New Event created`
+    );
+
+    await this.notificationModel.create({
+      userId: new Types.ObjectId(userId),
+      title: "Event Reminder",
+      message: `New Event Created`,
     });
 
     await this.remindersService.createEventReminders(
