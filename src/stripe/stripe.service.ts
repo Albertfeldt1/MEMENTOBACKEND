@@ -14,23 +14,22 @@ export class StripeService {
   }
 
   /* Create Stripe customer and store in DB */
- async createCustomerForUser(userId: string): Promise<string> {
-  const user = await this.userModel.findById(userId);
-  if (!user) throw new Error('User not found');
+  async createCustomerForUser(userId: string): Promise<string> {
+    const user = await this.userModel.findById(userId);
+    if (!user) throw new Error("User not found");
 
-  if (user.stripeCustomerId) return user.stripeCustomerId;
+    if (user.stripeCustomerId) return user.stripeCustomerId;
 
-  const customer = await this.stripe.customers.create({
-    email: user.email,
-    name: user.name,
-  });
+    const customer = await this.stripe.customers.create({
+      email: user.email,
+      name: user.name,
+    });
 
-  user.stripeCustomerId = customer.id;
-  await user.save();
+    user.stripeCustomerId = customer.id;
+    await user.save();
 
-  return customer.id;
-}
-
+    return customer.id;
+  }
 
   /* Create Stripe Product */
   async createProduct(name: string, description?: string) {
@@ -38,26 +37,26 @@ export class StripeService {
   }
 
   /* Create Stripe Price */
-async createPrice(
-  planName: string,
-  amount: number,
-  interval: 'month' | 'year',
-  description?: string,
-) {
-  // 1️⃣ Create product automatically
-  const product = await this.stripe.products.create({
-    name: planName,
-    description,
-  });
+  async createPrice(
+    planName: string,
+    amount: number,
+    interval: "month" | "year",
+    description?: string
+  ) {
+    const product = await this.stripe.products.create({
+      name: planName,
+      description,
+    });
 
-  // 2️⃣ Create recurring price
-  return this.stripe.prices.create({
-    product: product.id,
-    unit_amount: amount * 100,
-    currency: 'usd',
-    recurring: { interval },
-  });
-}
+    const unitAmount = Math.round(amount * 100); // 👈 FIX
+
+    return this.stripe.prices.create({
+      product: product.id,
+      unit_amount: unitAmount,
+      currency: "usd",
+      recurring: { interval },
+    });
+  }
 
   /* Create Checkout Subscription Session */
   async createCheckoutSession(userId: string, priceId: string) {

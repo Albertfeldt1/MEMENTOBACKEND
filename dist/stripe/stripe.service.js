@@ -29,7 +29,7 @@ let StripeService = class StripeService {
     async createCustomerForUser(userId) {
         const user = await this.userModel.findById(userId);
         if (!user)
-            throw new Error('User not found');
+            throw new Error("User not found");
         if (user.stripeCustomerId)
             return user.stripeCustomerId;
         const customer = await this.stripe.customers.create({
@@ -48,10 +48,11 @@ let StripeService = class StripeService {
             name: planName,
             description,
         });
+        const unitAmount = Math.round(amount * 100);
         return this.stripe.prices.create({
             product: product.id,
-            unit_amount: amount * 100,
-            currency: 'usd',
+            unit_amount: unitAmount,
+            currency: "usd",
             recurring: { interval },
         });
     }
