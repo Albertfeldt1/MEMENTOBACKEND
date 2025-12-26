@@ -38,7 +38,7 @@ let RemindersScheduler = class RemindersScheduler {
             }
             await this.notificationsService.sendPushNotification(token, 'Event Reminder', `${r.type.replace('_', ' ')}: ${r.eventId.title}`, { eventId: r.eventId._id.toString() });
             await this.notificationModel.create({
-                userId: r.userId,
+                userId: new mongoose_1.Types.ObjectId(r.userId),
                 title: 'Event Reminder',
                 message: `${r.type.replace('_', ' ')}: ${r.eventId.title}`,
             });

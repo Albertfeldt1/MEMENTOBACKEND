@@ -51,7 +51,7 @@ async handleReminders() {
     );
 
     await this.notificationModel.create({
-      userId: r.userId,
+      userId: new Types.ObjectId(r.userId),
       title: 'Event Reminder',
       message: `${r.type.replace('_', ' ')}: ${(r.eventId as any).title}`,
     });

@@ -45,19 +45,19 @@ const bodyParser = __importStar(require("body-parser"));
 const nestjs_i18n_1 = require("nestjs-i18n");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    app.use((0, morgan_1.default)('combined'));
+    app.use((0, morgan_1.default)("combined"));
     app.enableCors({
-        origin: '*',
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        origin: "*",
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         credentials: true,
     });
-    app.use('/webhook', bodyParser.raw({ type: 'application/json' }));
+    app.use("/stripe/webhook", bodyParser.raw({ type: "application/json" }));
     app.use(nestjs_i18n_1.I18nMiddleware);
     app.use(bodyParser.json());
-    app.setViewEngine('ejs');
-    app.setBaseViewsDir((0, path_1.join)(__dirname, '..', 'views'));
-    app.useStaticAssets((0, path_1.join)(__dirname, '..', 'uploads'), {
-        prefix: '/uploads/',
+    app.setViewEngine("ejs");
+    app.setBaseViewsDir((0, path_1.join)(__dirname, "..", "views"));
+    app.useStaticAssets((0, path_1.join)(__dirname, "..", "uploads"), {
+        prefix: "/uploads/",
     });
     app.useGlobalPipes(new common_1.ValidationPipe());
     await app.listen(process.env.PORT ?? 5414);
