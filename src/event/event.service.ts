@@ -27,19 +27,17 @@ export class EventService {
   ) {}
 
   async create(userId: string, dto: CreateEventDto) {
-    // 1️⃣ Parse date + time as IST
     const [hours, minutes] = dto.time.split(":").map(Number);
     const istDate = new Date(dto.date);
     istDate.setHours(hours, minutes, 0, 0);
 
-    // 2️⃣ Convert IST → UTC
     const utcDate = new Date(istDate.getTime() - 5.5 * 60 * 60 * 1000);
 
     const event = await this.eventModel.create({
       userId: new Types.ObjectId(userId),
       title: dto.title,
       image: dto.image,
-      date: utcDate, // ✅ stored in UTC
+      date: utcDate, 
       time: dto.time,
       location: dto.location,
     });
@@ -51,14 +49,14 @@ export class EventService {
     const token = userData?.device_token
     await this.notificationsService.sendPushNotification(
       token as any,
-      "Event Reminder",
-      `New Event created`
+      "Event Scheduled Successfully",
+      "Your event has been created successfully. We’ll notify you before it begins."
     );
 
     await this.notificationModel.create({
       userId: new Types.ObjectId(userId),
-      title: "Event Reminder",
-      message: `New Event Created`,
+      title: "Event Scheduled Successfully",
+      message: `Your event has been created successfully. We’ll notify you before it begins.`,
     });
 
     await this.remindersService.createEventReminders(

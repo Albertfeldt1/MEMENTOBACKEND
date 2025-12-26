@@ -49,11 +49,11 @@ let EventService = class EventService {
             throw new common_1.NotFoundException('User Not Found');
         }
         const token = userData?.device_token;
-        await this.notificationsService.sendPushNotification(token, "Event Reminder", `New Event created`);
+        await this.notificationsService.sendPushNotification(token, "Event Scheduled Successfully", "Your event has been created successfully. We’ll notify you before it begins.");
         await this.notificationModel.create({
             userId: new mongoose_2.Types.ObjectId(userId),
-            title: "Event Reminder",
-            message: `New Event Created`,
+            title: "Event Scheduled Successfully",
+            message: `Your event has been created successfully. We’ll notify you before it begins.`,
         });
         await this.remindersService.createEventReminders(event._id, userId, utcDate);
         return {
