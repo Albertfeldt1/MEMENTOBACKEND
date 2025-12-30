@@ -16,16 +16,12 @@ export declare class StripeController {
         amount: number;
         interval: "month" | "year";
         description: string;
-        stripeCustomerId: string;
-        startSubscriptionDate: string;
-        endSubscriptionDate: string;
-        subscriptionPlan: string;
     }): Promise<{
         statusCode: HttpStatus;
         message: string;
         data: import("stripe").Stripe.Response<import("stripe").Stripe.Price>;
     }>;
-    checkout(req: any, priceId: string): Promise<import("stripe").Stripe.Response<import("stripe").Stripe.Checkout.Session>>;
+    checkout(req: any, priceId: string, subscriptionId: string): Promise<import("stripe").Stripe.Response<import("stripe").Stripe.Checkout.Session>>;
     getSubscription(id: string): Promise<import("stripe").Stripe.Response<import("stripe").Stripe.Subscription>>;
     createCustomer(req: any): Promise<{
         statusCode: HttpStatus;

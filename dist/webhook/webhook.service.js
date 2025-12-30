@@ -31,33 +31,67 @@ let WebhookService = class WebhookService {
         this.stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
     }
     async handleStripeWebhook(signature, rawBody) {
-        console.log("🔔 Webhook received");
-        console.log("Signature:", signature);
-        console.log("Body type:", rawBody.constructor.name);
         let event;
         try {
             event = this.stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET);
         }
         catch (err) {
-            console.error("❌ Signature verification failed:", err.message);
-            throw err;
+            throw new common_1.BadRequestException("Invalid Stripe signature");
         }
-        console.log("✅ Event verified:", event.type);
+        const alreadyProcessed = await this.notificationModel.exists({
+            stripeEventId: event.id,
+        });
+        if (alreadyProcessed) {
+            return { received: true };
+        }
+        switch (event.type) {
+            case "checkout.session.completed":
+                await this.checkoutCompleted(event.data.object);
+                break;
+            case "invoice.payment_succeeded":
+                await this.paymentSucceeded(event.data.object);
+                break;
+            case "invoice.payment_failed":
+                await this.paymentFailed(event.data.object);
+                break;
+            case "customer.subscription.updated":
+            case "customer.subscription.created":
+                await this.subscriptionUpdated(event.data.object);
+                break;
+            case "customer.subscription.deleted":
+                await this.subscriptionCancelled(event.data.object);
+                break;
+            default:
+                console.log(`Unhandled event type: ${event.type}`);
+        }
+        await this.notificationModel.create({
+            stripeEventId: event.id,
+            title: "Stripe Event Processed",
+            message: `Processed event: ${event.type}`,
+        });
+        return { received: true };
     }
     async checkoutCompleted(session) {
         const customerId = session.customer;
-        const subscriptionId = session.subscription;
-        await this.userModel.findOneAndUpdate({ stripeCustomerId: customerId }, {
-            stripeSubscriptionId: subscriptionId,
-            isSubscriptionActive: true,
-            subscriptionStatus: "active",
-        });
+        const stripeSubscriptionId = session.subscription;
+        const userId = session.metadata?.userId;
+        const internalSubscriptionId = session.metadata?.subscriptionId;
+        const subscription = await this.stripe.subscriptions.retrieve(stripeSubscriptionId);
+        const start = subscription.current_period_start;
+        const end = subscription.current_period_end;
+        const data = await this.userModel.findOneAndUpdate({ _id: userId }, {
+            stripeCustomerId: customerId,
+            stripeSubscriptionId: stripeSubscriptionId,
+            subscriptionStatus: subscription.status,
+            isSubscriptionActive: subscription.status === "active",
+            subscriptionStart: start ? new Date(start * 1000) : null,
+            subscriptionEnd: end ? new Date(end * 1000) : null,
+            internalSubscriptionId,
+        }, { new: true });
+        console.log("=====>>>>data", data);
     }
     async paymentSucceeded(invoice) {
-        const line = invoice.lines?.data?.[0];
-        const subscriptionId = typeof line?.subscription === "string"
-            ? line.subscription
-            : line?.subscription?.id;
+        const subscriptionId = this.extractSubscriptionId(invoice);
         if (!subscriptionId)
             return;
         await this.userModel.findOneAndUpdate({ stripeSubscriptionId: subscriptionId }, {
@@ -66,32 +100,49 @@ let WebhookService = class WebhookService {
         });
     }
     async paymentFailed(invoice) {
-        const line = invoice.lines?.data?.[0];
-        const subscriptionId = typeof line?.subscription === "string"
-            ? line.subscription
-            : line?.subscription?.id;
+        const subscriptionId = this.extractSubscriptionId(invoice);
         if (!subscriptionId)
             return;
         const user = await this.userModel.findOneAndUpdate({ stripeSubscriptionId: subscriptionId }, {
-            subscriptionStatus: "past_due",
             isSubscriptionActive: false,
+            subscriptionStatus: "past_due",
         }, { new: true });
         if (!user)
             return;
         await this.notificationModel.create({
             userId: user._id,
-            title: "Payment Issue Detected",
-            message: "We couldn’t process your subscription payment. Please update your payment details to avoid service interruption.",
+            title: "Payment Failed",
+            message: "Your subscription payment failed. Please update your payment method to avoid interruption.",
         });
         if (user.device_token) {
-            await this.notificationsService.sendPushNotification(user.device_token, "Payment Issue Detected", "We couldn’t process your subscription payment. Please update your payment details to avoid service interruption.");
+            await this.notificationsService.sendPushNotification(user.device_token, "Payment Failed", "Your subscription payment failed. Please update your payment method.");
         }
+    }
+    async subscriptionUpdated(subscription) {
+        await this.userModel.findOneAndUpdate({ stripeSubscriptionId: subscription.id }, {
+            subscriptionStatus: subscription.status,
+            isSubscriptionActive: subscription.status === "active",
+            subscriptionStart: new Date(subscription.current_period_start * 1000),
+            subscriptionEnd: new Date(subscription.current_period_end * 1000),
+        });
     }
     async subscriptionCancelled(subscription) {
         await this.userModel.findOneAndUpdate({ stripeSubscriptionId: subscription.id }, {
             isSubscriptionActive: false,
             subscriptionStatus: "cancelled",
         });
+    }
+    extractSubscriptionId(invoice) {
+        const sub = invoice.subscription;
+        if (typeof sub === "string")
+            return sub;
+        const line = invoice.lines?.data.find((l) => typeof l.subscription === "string" ||
+            typeof l.subscription?.id === "string");
+        if (!line)
+            return null;
+        return typeof line.subscription === "string"
+            ? line.subscription
+            : (line.subscription?.id ?? null);
     }
 };
 exports.WebhookService = WebhookService;

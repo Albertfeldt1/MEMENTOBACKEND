@@ -32,15 +32,7 @@ export class NotificationsService {
       this.logger.log(
         `Email sent to ${to} | Subject: "${subject}" | MessageId: ${response.messageId}`
       );
-      // return {
-      //   success: true,
-      //   message: 'Email sent successfully',
-      //   info: {
-      //     messageId: response.messageId,
-      //     accepted: response.accepted,
-      //     rejected: response.rejected,
-      //   },
-      // };
+
     } catch (error) {
       this.logger.error(
         `Failed to send email to ${to} | Subject: "${subject}" | Error: ${error.message}`,
@@ -137,14 +129,6 @@ export class NotificationsService {
     body: string,
     data?: any
   ) {
-    console.log(
-      "=====>>>>>>>>deviceTokens",
-      deviceTokens,
-      "====>>>title",
-      title,
-      "===>>>body",
-      body
-    );
     try {
       const message: admin.messaging.MulticastMessage = {
         notification: {

@@ -43,12 +43,11 @@ let StripeService = class StripeService {
     async createProduct(name, description) {
         return this.stripe.products.create({ name, description });
     }
-    async createPrice(planName, amount, interval, description, stripeCustomerId, startSubscriptionDate, endSubscriptionDate, subscriptionPlan) {
+    async createPrice(planName, amount, interval, description) {
         const product = await this.stripe.products.create({
             name: planName,
             description,
         });
-        await this.userModel.findOneAndUpdate({ stripeCustomerId }, { $set: { startSubscriptionDate, endSubscriptionDate, subscriptionPlan } }, { new: true });
         const unitAmount = Math.round(amount * 100);
         return this.stripe.prices.create({
             product: product.id,
@@ -57,7 +56,7 @@ let StripeService = class StripeService {
             recurring: { interval },
         });
     }
-    async createCheckoutSession(userId, priceId) {
+    async createCheckoutSession(userId, priceId, subscriptionId) {
         const customerId = await this.createCustomerForUser(userId);
         return this.stripe.checkout.sessions.create({
             mode: "subscription",
@@ -69,6 +68,7 @@ let StripeService = class StripeService {
                     quantity: 1,
                 },
             ],
+            metadata: { userId, subscriptionId },
             success_url: `${process.env.APP_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${process.env.APP_URL}/payment/cancel`,
         });

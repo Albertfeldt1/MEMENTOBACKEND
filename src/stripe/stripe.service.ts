@@ -42,17 +42,17 @@ export class StripeService {
     amount: number,
     interval: "month" | "year",
     description?: string,
-    stripeCustomerId?:string,
-    startSubscriptionDate?:string,
-    endSubscriptionDate?:string,
-    subscriptionPlan?:string
+    // stripeCustomerId?:string,
+    // startSubscriptionDate?:string,
+    // endSubscriptionDate?:string,
+    // subscriptionPlan?:string
   ) {
     const product = await this.stripe.products.create({
       name: planName,
       description,
     });
-    await this.userModel.findOneAndUpdate({stripeCustomerId},{$set:{startSubscriptionDate,endSubscriptionDate,subscriptionPlan}},{new:true})
-    const unitAmount = Math.round(amount * 100); // 👈 FIX
+    // await this.userModel.findOneAndUpdate({stripeCustomerId},{$set:{startSubscriptionDate,endSubscriptionDate,subscriptionPlan}},{new:true})
+    const unitAmount = Math.round(amount * 100); 
     return this.stripe.prices.create({
       product: product.id,
       unit_amount: unitAmount,
@@ -62,19 +62,19 @@ export class StripeService {
   }
 
   /* Create Checkout Subscription Session */
-  async createCheckoutSession(userId: string, priceId: string) {
+  async createCheckoutSession(userId: string, priceId: string,subscriptionId:string) {
     const customerId = await this.createCustomerForUser(userId);
-
     return this.stripe.checkout.sessions.create({
       mode: "subscription",
       customer: customerId,
       payment_method_types: ["card"],
       line_items: [
         {
-          price: priceId, // MUST be price_xxx
+          price: priceId, 
           quantity: 1,
         },
       ],
+      metadata:{userId,subscriptionId},
       success_url: `${process.env.APP_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.APP_URL}/payment/cancel`,
     });

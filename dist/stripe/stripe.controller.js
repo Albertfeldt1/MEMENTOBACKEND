@@ -30,7 +30,7 @@ let StripeController = class StripeController {
         return response;
     }
     async createPrice(body) {
-        const data = await this.stripeService.createPrice(body.planName, body.amount, body.interval, body.description, body.stripeCustomerId, body.startSubscriptionDate, body.endSubscriptionDate, body.subscriptionPlan);
+        const data = await this.stripeService.createPrice(body.planName, body.amount, body.interval, body.description);
         const response = {
             statusCode: common_1.HttpStatus?.OK,
             message: "Price Created successfully",
@@ -38,8 +38,8 @@ let StripeController = class StripeController {
         };
         return response;
     }
-    async checkout(req, priceId) {
-        return this.stripeService.createCheckoutSession(req.user.userId, priceId);
+    async checkout(req, priceId, subscriptionId) {
+        return this.stripeService.createCheckoutSession(req.user.userId, priceId, subscriptionId);
     }
     async getSubscription(id) {
         return this.stripeService.retrieveSubscription(id);
@@ -75,8 +75,9 @@ __decorate([
     (0, common_1.Post)("checkout"),
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Body)("priceId")),
+    __param(2, (0, common_1.Body)('subscriptionId')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [Object, String, String]),
     __metadata("design:returntype", Promise)
 ], StripeController.prototype, "checkout", null);
 __decorate([

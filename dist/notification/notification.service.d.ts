@@ -1,10 +1,10 @@
-import { MailerService } from '@nestjs-modules/mailer';
+import { MailerService } from "@nestjs-modules/mailer";
 export declare class NotificationsService {
     private readonly mailerService;
     private readonly logger;
     constructor(mailerService: MailerService);
     sendEmail(to: string, subject: string, template: string, context: any): Promise<void>;
-    sendPushNotification(deviceToken: string, title: string, body: string, data?: any): Promise<{
+    sendPushNotification(deviceToken: string, title: string, body: string, data?: Record<string, string>): Promise<{
         success: boolean;
         message: string;
         response: string;

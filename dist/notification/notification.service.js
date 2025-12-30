@@ -58,7 +58,7 @@ let NotificationsService = NotificationsService_1 = class NotificationsService {
             admin.initializeApp({
                 credential: admin.credential.cert({
                     projectId: process.env.PROJECT_ID,
-                    privateKey: process.env.PRIVATE_KEY?.replace(/\\n/g, '\n'),
+                    privateKey: process.env.PRIVATE_KEY?.replace(/\\n/g, "\n"),
                     clientEmail: process.env.CLIENT_EMAIL,
                 }),
             });
@@ -67,7 +67,7 @@ let NotificationsService = NotificationsService_1 = class NotificationsService {
     async sendEmail(to, subject, template, context) {
         try {
             const response = await this.mailerService.sendMail({
-                from: 'contact@dhaniq.co.uk',
+                from: "contact@dhaniq.co.uk",
                 to,
                 subject,
                 template,
@@ -77,32 +77,51 @@ let NotificationsService = NotificationsService_1 = class NotificationsService {
         }
         catch (error) {
             this.logger.error(`Failed to send email to ${to} | Subject: "${subject}" | Error: ${error.message}`, error.stack);
-            console.error('Mailer Error:', error);
+            console.error("Mailer Error:", error);
         }
     }
     async sendPushNotification(deviceToken, title, body, data) {
         try {
             const message = {
+                token: deviceToken,
                 notification: {
                     title,
                     body,
                 },
                 data: data || {},
-                token: deviceToken,
+                apns: {
+                    headers: {
+                        "apns-priority": "10",
+                    },
+                    payload: {
+                        aps: {
+                            alert: {
+                                title,
+                                body,
+                            },
+                            sound: "default",
+                            badge: 1,
+                            "content-available": 1,
+                        },
+                    },
+                },
             };
             const response = await admin.messaging().send(message);
             return {
                 success: true,
-                message: 'Push notification sent successfully',
+                message: "iOS push notification sent successfully",
                 response,
             };
         }
         catch (error) {
-            return { success: false, message: error.message };
+            console.error("FCM Error:", error);
+            return {
+                success: false,
+                message: error.message,
+            };
         }
     }
     async sendBulkPushNotification(deviceTokens, title, body, data) {
-        console.log("=====>>>>>>>>deviceTokens", deviceTokens, "====>>>title", title, "===>>>body", body);
         try {
             const message = {
                 notification: {
@@ -115,7 +134,7 @@ let NotificationsService = NotificationsService_1 = class NotificationsService {
             const response = await admin.messaging().sendEachForMulticast(message);
             return {
                 success: true,
-                message: 'Bulk push notifications sent successfully',
+                message: "Bulk push notifications sent successfully",
                 response,
             };
         }
