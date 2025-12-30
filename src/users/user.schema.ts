@@ -47,7 +47,7 @@ export class User extends Document {
   stripeSubscriptionId?: string;
 
   @Prop({type: String})
-  subscriptionPlan?:string;
+  internalSubscriptionId?:string;
 
   @Prop()
   startSubscriptionDate?: Date;

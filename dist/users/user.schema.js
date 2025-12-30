@@ -74,7 +74,7 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ type: String }),
     __metadata("design:type", String)
-], User.prototype, "subscriptionPlan", void 0);
+], User.prototype, "internalSubscriptionId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", Date)

@@ -13,7 +13,7 @@ export declare class User extends Document {
     isDeleted: boolean;
     stripeCustomerId?: string;
     stripeSubscriptionId?: string;
-    subscriptionPlan?: string;
+    internalSubscriptionId?: string;
     startSubscriptionDate?: Date;
     endSubscriptionDate?: Date;
     subscriptionStatus?: "active" | "past_due" | "cancelled";
