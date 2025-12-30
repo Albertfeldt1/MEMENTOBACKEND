@@ -65,7 +65,18 @@ export class RemindersService {
       .populate("eventId userId");
   }
 
-  async markAsSent(id: string) {
-    return this.reminderModel.updateOne({ _id: id }, { isSent: true });
+  async markAsSent(id: string, sent: boolean) {
+    return this.reminderModel.updateOne(
+      { _id: id },
+      {
+        isSent: sent,
+        isProcessing: false,
+        sentAt: new Date(),
+      }
+    );
+  }
+
+  async resetProcessing(id: string) {
+    return this.reminderModel.updateOne({ _id: id }, { isProcessing: false });
   }
 }

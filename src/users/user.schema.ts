@@ -46,6 +46,9 @@ export class User extends Document {
   @Prop({ type: String })
   stripeSubscriptionId?: string;
 
+  @Prop({ type: String })
+  timezone?: string;
+
   @Prop({type: String})
   internalSubscriptionId?:string;
 

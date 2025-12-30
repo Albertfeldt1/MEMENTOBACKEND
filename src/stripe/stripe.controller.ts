@@ -38,10 +38,6 @@ export class StripeController {
     amount: number;
     interval: "month" | "year";
     description:string;
-    // stripeCustomerId:string;
-    // startSubscriptionDate:string;
-    // endSubscriptionDate:string;
-    // subscriptionPlan:string
     }
   ) {
     const data = await this.stripeService.createPrice(
@@ -49,10 +45,6 @@ export class StripeController {
       body.amount,
       body.interval,
       body.description,
-      // body.stripeCustomerId,
-      // body.startSubscriptionDate,
-      // body.endSubscriptionDate,
-      // body.subscriptionPlan
     );
     const response = {
       statusCode:HttpStatus?.OK,

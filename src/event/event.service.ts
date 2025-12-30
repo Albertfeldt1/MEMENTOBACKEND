@@ -7,6 +7,7 @@ import { Event, EventDocument } from "./entities/event.entity";
 import { CreateEventDto } from "./dto/create-event.dto";
 import { UpdateEventDto } from "./dto/update-event.dto";
 
+import { DateTime } from "luxon";
 import { User } from "src/users/user.schema";
 import { RemindersService } from "src/reminders/reminders.service";
 import { NotificationsService } from "src/notification/notification.service";
@@ -27,38 +28,47 @@ export class EventService {
   ) {}
 
   async create(userId: string, dto: CreateEventDto) {
-    const [hours, minutes] = dto.time.split(":").map(Number);
-    const istDate = new Date(dto.date);
-    istDate.setHours(hours, minutes, 0, 0);
+    const user = await this.userModel.findById(userId);
 
-    const utcDate = new Date(istDate.getTime() - 5.5 * 60 * 60 * 1000);
+    if (!user || !user.timezone) {
+      throw new NotFoundException("User or timezone not found");
+    }
+
+    // Combine date + time in USER timezone
+    const userDateTime = DateTime.fromISO(
+      `${dto.date}T${dto.time}`,
+      { zone: user.timezone } // 🔥 user timezone
+    );
+
+    // Convert to UTC before saving
+    const utcDate = userDateTime.toUTC().toJSDate();
 
     const event = await this.eventModel.create({
       userId: new Types.ObjectId(userId),
       title: dto.title,
       image: dto.image,
-      date: utcDate, 
+      date: utcDate, // ✅ always UTC
       time: dto.time,
       location: dto.location,
     });
-    const userData = await this.userModel.findById(userId)
-    if(!userData)
-    {
-      throw new NotFoundException('User Not Found')
+
+    // Notifications
+    if (user.device_token) {
+      await this.notificationsService.sendPushNotification(
+        user.device_token,
+        "Event Scheduled Successfully",
+        "Your event has been created successfully. We’ll notify you before it begins."
+      );
     }
-    const token = userData?.device_token
-    await this.notificationsService.sendPushNotification(
-      token as any,
-      "Event Scheduled Successfully",
-      "Your event has been created successfully. We’ll notify you before it begins."
-    );
 
     await this.notificationModel.create({
       userId: new Types.ObjectId(userId),
       title: "Event Scheduled Successfully",
-      message: `Your event has been created successfully. We’ll notify you before it begins.`,
+      message:
+        "Your event has been created successfully. We’ll notify you before it begins.",
     });
 
+    // Create reminders in UTC
     await this.remindersService.createEventReminders(
       event._id,
       userId,
