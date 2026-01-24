@@ -10,7 +10,6 @@ exports.WebhookModule = void 0;
 const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const webhook_controller_1 = require("./webhook.controller");
-const notification_module_1 = require("../notification/notification.module");
 const webhook_service_1 = require("./webhook.service");
 const user_schema_1 = require("../users/user.schema");
 const notification_entity_1 = require("../notifications/entities/notification.entity");
@@ -24,7 +23,6 @@ exports.WebhookModule = WebhookModule = __decorate([
                 { name: user_schema_1.User.name, schema: user_schema_1.UserSchema },
                 { name: notification_entity_1.Notification.name, schema: notification_entity_1.NotificationSchema },
             ]),
-            notification_module_1.NotificationsModule
         ],
         controllers: [webhook_controller_1.WebhookController],
         providers: [webhook_service_1.WebhookService],

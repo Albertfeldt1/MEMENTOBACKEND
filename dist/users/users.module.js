@@ -13,7 +13,6 @@ const users_controller_1 = require("./users.controller");
 const users_service_1 = require("./users.service");
 const jwt_1 = require("@nestjs/jwt");
 const user_schema_1 = require("./user.schema");
-const notification_module_1 = require("../notification/notification.module");
 let UsersModule = class UsersModule {
 };
 exports.UsersModule = UsersModule;
@@ -25,7 +24,6 @@ exports.UsersModule = UsersModule = __decorate([
                 secret: 'your-secret-key',
                 signOptions: { expiresIn: '360d' },
             }),
-            notification_module_1.NotificationsModule,
         ],
         controllers: [users_controller_1.UsersController],
         providers: [users_service_1.UsersService],

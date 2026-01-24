@@ -52,14 +52,12 @@ const user_schema_1 = require("./user.schema");
 const jwt_1 = require("@nestjs/jwt");
 const nestjs_i18n_1 = require("nestjs-i18n");
 const mongoose_2 = require("@nestjs/mongoose");
-const notification_service_1 = require("../notification/notification.service");
 const common_1 = require("@nestjs/common");
 const response_helper_1 = require("../utility/response.helper");
 let UsersService = class UsersService {
-    constructor(userModel, jwtService, notificationsService, i18n) {
+    constructor(userModel, jwtService, i18n) {
         this.userModel = userModel;
         this.jwtService = jwtService;
-        this.notificationsService = notificationsService;
         this.i18n = i18n;
     }
     sanitizeUser(user) {
@@ -294,13 +292,10 @@ let UsersService = class UsersService {
         };
     }
     async sendTestNotification(deviceToken) {
-        const title = "Test Notification";
-        const body = "This notification is sent via NotificationsService";
-        const data = {
-            type: "test",
-            screen: "home",
+        return {
+            statusCode: 503,
+            message: "Notifications service is temporarily disabled",
         };
-        return await this.notificationsService.sendPushNotification(deviceToken, title, body, data);
     }
 };
 exports.UsersService = UsersService;
@@ -309,7 +304,6 @@ exports.UsersService = UsersService = __decorate([
     __param(0, (0, mongoose_2.InjectModel)(user_schema_1.User.name)),
     __metadata("design:paramtypes", [mongoose_1.Model,
         jwt_1.JwtService,
-        notification_service_1.NotificationsService,
         nestjs_i18n_1.I18nService])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map

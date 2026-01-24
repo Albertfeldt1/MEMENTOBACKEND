@@ -2,7 +2,6 @@ import { Model } from "mongoose";
 import { User } from "./user.schema";
 import { JwtService } from "@nestjs/jwt";
 import { I18nService } from "nestjs-i18n";
-import { NotificationsService } from "src/notification/notification.service";
 import { HttpStatus } from "@nestjs/common";
 import { SocialLoginDto } from "./dto/social-login.dto";
 import { RegisterDto } from "./dto/register-profile.dto";
@@ -11,9 +10,8 @@ import { CheckEmailDto } from "./dto/check-email.dto";
 export declare class UsersService {
     private userModel;
     private jwtService;
-    private notificationsService;
     private readonly i18n;
-    constructor(userModel: Model<User>, jwtService: JwtService, notificationsService: NotificationsService, i18n: I18nService);
+    constructor(userModel: Model<User>, jwtService: JwtService, i18n: I18nService);
     private sanitizeUser;
     socialLogin(body: SocialLoginDto): Promise<import("src/utility/response.helper").ResponseStructure<{
         statusCode: HttpStatus;
@@ -96,12 +94,7 @@ export declare class UsersService {
         };
     }>;
     sendTestNotification(deviceToken: string): Promise<{
-        success: boolean;
+        statusCode: number;
         message: string;
-        response: string;
-    } | {
-        success: boolean;
-        message: any;
-        response?: undefined;
     }>;
 }

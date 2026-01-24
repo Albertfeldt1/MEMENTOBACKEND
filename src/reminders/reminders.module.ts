@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { RemindersService } from './reminders.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { NotificationsModule } from 'src/notification/notification.module';
+// import { NotificationsModule } from 'src/notification/notification.module';
 import { EventReminder, EventReminderSchema } from 'src/event/entities/event-reminder.schema';
 import { EventSchema } from 'src/event/entities/event.entity';
 import { RemindersScheduler } from './reminders.scheduler';
@@ -16,7 +16,7 @@ import { Notification, NotificationSchema } from 'src/notifications/entities/not
       { name: User.name, schema: UserSchema },
       { name: Notification.name, schema: NotificationSchema },
     ]),
-    NotificationsModule
+    // NotificationsModule
   ],
   providers: [RemindersService, RemindersScheduler],
   exports: [RemindersService]

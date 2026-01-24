@@ -12,7 +12,6 @@ const subscription_service_1 = require("./subscription.service");
 const subscription_controller_1 = require("./subscription.controller");
 const mongoose_1 = require("@nestjs/mongoose");
 const jwt_1 = require("@nestjs/jwt");
-const notification_module_1 = require("../notification/notification.module");
 const subscription_entity_1 = require("./entities/subscription.entity");
 let SubscriptionModule = class SubscriptionModule {
 };
@@ -25,7 +24,6 @@ exports.SubscriptionModule = SubscriptionModule = __decorate([
                 secret: 'your-secret-key',
                 signOptions: { expiresIn: '360d' },
             }),
-            notification_module_1.NotificationsModule,
         ],
         controllers: [subscription_controller_1.SubscriptionController],
         providers: [subscription_service_1.SubscriptionService],

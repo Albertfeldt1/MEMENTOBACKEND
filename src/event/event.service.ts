@@ -10,7 +10,7 @@ import { UpdateEventDto } from "./dto/update-event.dto";
 import { DateTime } from "luxon";
 import { User } from "src/users/user.schema";
 import { RemindersService } from "src/reminders/reminders.service";
-import { NotificationsService } from "src/notification/notification.service";
+// import { NotificationsService } from "src/notification/notification.service";
 import { Notification } from "src/notifications/entities/notification.entity";
 
 @Injectable()
@@ -23,7 +23,7 @@ export class EventService {
     @InjectModel(User.name)
     private userModel: Model<User>,
     private readonly i18n: I18nService,
-    private notificationsService: NotificationsService,
+    // private notificationsService: NotificationsService,
     private readonly remindersService: RemindersService
   ) {}
 
@@ -53,13 +53,13 @@ export class EventService {
     });
 
     // Notifications
-    if (user.device_token) {
-      await this.notificationsService.sendPushNotification(
-        user.device_token,
-        "Event Scheduled Successfully",
-        "Your event has been created successfully. We’ll notify you before it begins."
-      );
-    }
+    // if (user.device_token) {
+    //   await this.notificationsService.sendPushNotification(
+    //     user.device_token,
+    //     "Event Scheduled Successfully",
+    //     "Your event has been created successfully. We'll notify you before it begins."
+    //   );
+    // }
 
     await this.notificationModel.create({
       userId: new Types.ObjectId(userId),

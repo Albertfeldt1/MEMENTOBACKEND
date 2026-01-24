@@ -5,8 +5,8 @@ import { User } from "./user.schema";
 import { JwtService } from "@nestjs/jwt";
 import { I18nService } from "nestjs-i18n";
 import { InjectModel } from "@nestjs/mongoose";
-import { NotificationsModule } from "src/notification/notification.module";
-import { NotificationsService } from "src/notification/notification.service";
+// import { NotificationsModule } from "src/notification/notification.module";
+// import { NotificationsService } from "src/notification/notification.service";
 import {
   BadRequestException,
   ConflictException,
@@ -27,7 +27,7 @@ export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private jwtService: JwtService,
-    private notificationsService: NotificationsService,
+    // private notificationsService: NotificationsService,
     private readonly i18n: I18nService
   ) {}
 
@@ -327,18 +327,22 @@ export class UsersService {
   }
 
   async sendTestNotification(deviceToken: string) {
-    const title = "Test Notification";
-    const body = "This notification is sent via NotificationsService";
-    const data = {
-      type: "test",
-      screen: "home",
-    };
+    // const title = "Test Notification";
+    // const body = "This notification is sent via NotificationsService";
+    // const data = {
+    //   type: "test",
+    //   screen: "home",
+    // };
 
-    return await this.notificationsService.sendPushNotification(
-      deviceToken,
-      title,
-      body,
-      data
-    );
+    // return await this.notificationsService.sendPushNotification(
+    //   deviceToken,
+    //   title,
+    //   body,
+    //   data
+    // );
+    return {
+      statusCode: 503,
+      message: "Notifications service is temporarily disabled",
+    };
   }
 }

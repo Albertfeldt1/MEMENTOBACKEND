@@ -66,8 +66,15 @@ let RemindersService = class RemindersService {
         })
             .populate("eventId userId");
     }
-    async markAsSent(id) {
-        return this.reminderModel.updateOne({ _id: id }, { isSent: true });
+    async markAsSent(id, sent) {
+        return this.reminderModel.updateOne({ _id: id }, {
+            isSent: sent,
+            isProcessing: false,
+            sentAt: new Date(),
+        });
+    }
+    async resetProcessing(id) {
+        return this.reminderModel.updateOne({ _id: id }, { isProcessing: false });
     }
 };
 exports.RemindersService = RemindersService;

@@ -21,13 +21,11 @@ const stripe_1 = __importDefault(require("stripe"));
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const user_schema_1 = require("../users/user.schema");
-const notification_service_1 = require("../notification/notification.service");
 const notification_entity_1 = require("../notifications/entities/notification.entity");
 let WebhookService = class WebhookService {
-    constructor(userModel, notificationModel, notificationsService) {
+    constructor(userModel, notificationModel) {
         this.userModel = userModel;
         this.notificationModel = notificationModel;
-        this.notificationsService = notificationsService;
         this.stripe = new stripe_1.default(process.env.STRIPE_SECRET_KEY);
     }
     async handleStripeWebhook(signature, rawBody) {
@@ -114,9 +112,6 @@ let WebhookService = class WebhookService {
             title: "Payment Failed",
             message: "Your subscription payment failed. Please update your payment method to avoid interruption.",
         });
-        if (user.device_token) {
-            await this.notificationsService.sendPushNotification(user.device_token, "Payment Failed", "Your subscription payment failed. Please update your payment method.");
-        }
     }
     async subscriptionUpdated(subscription) {
         await this.userModel.findOneAndUpdate({ stripeSubscriptionId: subscription.id }, {
@@ -151,7 +146,6 @@ exports.WebhookService = WebhookService = __decorate([
     __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
     __param(1, (0, mongoose_1.InjectModel)(notification_entity_1.Notification.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        mongoose_2.Model,
-        notification_service_1.NotificationsService])
+        mongoose_2.Model])
 ], WebhookService);
 //# sourceMappingURL=webhook.service.js.map

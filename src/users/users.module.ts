@@ -4,7 +4,7 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { JwtModule } from '@nestjs/jwt';
 import { User, UserSchema } from './user.schema';
-import { NotificationsModule } from 'src/notification/notification.module';
+// import { NotificationsModule } from 'src/notification/notification.module';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
@@ -12,7 +12,7 @@ import { NotificationsModule } from 'src/notification/notification.module';
       secret: 'your-secret-key',
       signOptions: { expiresIn: '360d' },
     }),
-    NotificationsModule,
+    // NotificationsModule,
   ],
   controllers: [UsersController],
   providers: [UsersService],

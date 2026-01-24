@@ -48,13 +48,8 @@ export declare class UsersController {
         };
     }>;
     sendTestNotification(deviceToken: string): Promise<{
-        success: boolean;
+        statusCode: number;
         message: string;
-        response: string;
-    } | {
-        success: boolean;
-        message: any;
-        response?: undefined;
     }>;
     register(body: RegisterDto): Promise<import("../utility/response.helper").ResponseStructure<{
         statusCode: HttpStatus;

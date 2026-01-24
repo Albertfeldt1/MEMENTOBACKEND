@@ -17,7 +17,7 @@ import mongodbConfig from "./config/mongodb.config";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import path, { join } from "path";
 import { AdminAuthModule } from "./admin-auth/admin-auth.module";
-import { NotificationsModules } from "./notifications/notifications.module";
+// import { NotificationsModules } from "./notifications/notifications.module";
 import { PagesModule } from "./pages/pages.module";
 import { EventModule } from "./event/event.module";
 import { SubscriptionModule } from "./subscription/subscription.module";
@@ -54,7 +54,7 @@ import { WebhookModule } from './webhook/webhook.module';
     UsersModule,
     MailModule,
     AdminAuthModule,
-    NotificationsModules,
+    // NotificationsModules,
     PagesModule,
     EventModule,
     SubscriptionModule,

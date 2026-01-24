@@ -74,6 +74,10 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ type: String }),
     __metadata("design:type", String)
+], User.prototype, "timezone", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: String }),
+    __metadata("design:type", String)
 ], User.prototype, "internalSubscriptionId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),

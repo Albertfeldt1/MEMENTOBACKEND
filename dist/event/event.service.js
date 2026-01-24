@@ -18,24 +18,25 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const nestjs_i18n_1 = require("nestjs-i18n");
 const event_entity_1 = require("./entities/event.entity");
+const luxon_1 = require("luxon");
 const user_schema_1 = require("../users/user.schema");
 const reminders_service_1 = require("../reminders/reminders.service");
-const notification_service_1 = require("../notification/notification.service");
 const notification_entity_1 = require("../notifications/entities/notification.entity");
 let EventService = class EventService {
-    constructor(eventModel, notificationModel, userModel, i18n, notificationsService, remindersService) {
+    constructor(eventModel, notificationModel, userModel, i18n, remindersService) {
         this.eventModel = eventModel;
         this.notificationModel = notificationModel;
         this.userModel = userModel;
         this.i18n = i18n;
-        this.notificationsService = notificationsService;
         this.remindersService = remindersService;
     }
     async create(userId, dto) {
-        const [hours, minutes] = dto.time.split(":").map(Number);
-        const istDate = new Date(dto.date);
-        istDate.setHours(hours, minutes, 0, 0);
-        const utcDate = new Date(istDate.getTime() - 5.5 * 60 * 60 * 1000);
+        const user = await this.userModel.findById(userId);
+        if (!user || !user.timezone) {
+            throw new common_1.NotFoundException("User or timezone not found");
+        }
+        const userDateTime = luxon_1.DateTime.fromISO(`${dto.date}T${dto.time}`, { zone: user.timezone });
+        const utcDate = userDateTime.toUTC().toJSDate();
         const event = await this.eventModel.create({
             userId: new mongoose_2.Types.ObjectId(userId),
             title: dto.title,
@@ -44,16 +45,10 @@ let EventService = class EventService {
             time: dto.time,
             location: dto.location,
         });
-        const userData = await this.userModel.findById(userId);
-        if (!userData) {
-            throw new common_1.NotFoundException('User Not Found');
-        }
-        const token = userData?.device_token;
-        await this.notificationsService.sendPushNotification(token, "Event Scheduled Successfully", "Your event has been created successfully. We’ll notify you before it begins.");
         await this.notificationModel.create({
             userId: new mongoose_2.Types.ObjectId(userId),
             title: "Event Scheduled Successfully",
-            message: `Your event has been created successfully. We’ll notify you before it begins.`,
+            message: "Your event has been created successfully. We’ll notify you before it begins.",
         });
         await this.remindersService.createEventReminders(event._id, userId, utcDate);
         return {
@@ -154,7 +149,6 @@ exports.EventService = EventService = __decorate([
         mongoose_2.Model,
         mongoose_2.Model,
         nestjs_i18n_1.I18nService,
-        notification_service_1.NotificationsService,
         reminders_service_1.RemindersService])
 ], EventService);
 //# sourceMappingURL=event.service.js.map

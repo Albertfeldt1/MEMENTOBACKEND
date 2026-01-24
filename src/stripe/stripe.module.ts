@@ -4,7 +4,7 @@ import { StripeController } from './stripe.controller';
 import { User,UserSchema } from 'src/users/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
-import { NotificationsModule } from 'src/notification/notification.module';
+// import { NotificationsModule } from 'src/notification/notification.module';
 
 @Module({
    imports: [
@@ -13,7 +13,7 @@ import { NotificationsModule } from 'src/notification/notification.module';
         secret: 'your-secret-key',
         signOptions: { expiresIn: '360d' },
       }),
-      NotificationsModule,
+      // NotificationsModule,
     ],
   controllers: [StripeController],
   providers: [StripeService],

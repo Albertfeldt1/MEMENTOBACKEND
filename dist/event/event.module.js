@@ -14,7 +14,6 @@ const jwt_1 = require("@nestjs/jwt");
 const reminders_module_1 = require("../reminders/reminders.module");
 const event_controller_1 = require("./event.controller");
 const event_entity_1 = require("./entities/event.entity");
-const notification_module_1 = require("../notification/notification.module");
 const user_schema_1 = require("../users/user.schema");
 const notification_entity_1 = require("../notifications/entities/notification.entity");
 let EventModule = class EventModule {
@@ -32,7 +31,6 @@ exports.EventModule = EventModule = __decorate([
                 secret: "your-secret-key",
                 signOptions: { expiresIn: "360d" },
             }),
-            notification_module_1.NotificationsModule,
             reminders_module_1.RemindersModule,
         ],
         controllers: [event_controller_1.EventController],

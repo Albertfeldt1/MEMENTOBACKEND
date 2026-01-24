@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { RemindersService } from "./reminders.service";
 import { Cron } from "@nestjs/schedule";
-import { NotificationsService } from "src/notification/notification.service";
+// import { NotificationsService } from "src/notification/notification.service";
 import { Notification } from "src/notifications/entities/notification.entity";
 import { Model, Types } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
@@ -13,7 +13,7 @@ export class RemindersScheduler {
     private notificationModel: Model<Notification>,
     @InjectModel(User.name) private userModel: Model<User>,
     private readonly remindersService: RemindersService,
-    private notificationsService: NotificationsService
+    // private notificationsService: NotificationsService
   ) {}
 
   // @Cron("* * * * *")
@@ -60,12 +60,12 @@ async handleReminders() {
         continue;
       }
 
-      await this.notificationsService.sendPushNotification(
-        token,
-        "Event Reminder",
-        `${r.type.replace("_", " ")}: ${(r.eventId as any).title}`,
-        { eventId: r.eventId._id.toString() }
-      );
+      // await this.notificationsService.sendPushNotification(
+      //   token,
+      //   "Event Reminder",
+      //   `${r.type.replace("_", " ")}: ${(r.eventId as any).title}`,
+      //   { eventId: r.eventId._id.toString() }
+      // );
 
       await this.notificationModel.create({
         userId: new Types.ObjectId(r.userId),

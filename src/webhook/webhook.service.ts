@@ -3,7 +3,7 @@ import Stripe from "stripe";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { User } from "src/users/user.schema";
-import { NotificationsService } from "src/notification/notification.service";
+// import { NotificationsService } from "src/notification/notification.service";
 import { Notification } from "src/notifications/entities/notification.entity";
 
 @Injectable()
@@ -14,7 +14,7 @@ export class WebhookService {
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(Notification.name)
     private notificationModel: Model<Notification>,
-    private notificationsService: NotificationsService
+    // private notificationsService: NotificationsService
   ) {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   }
@@ -159,13 +159,13 @@ private async checkoutCompleted(session: Stripe.Checkout.Session) {
     });
 
     // Push notification
-    if (user.device_token) {
-      await this.notificationsService.sendPushNotification(
-        user.device_token as any,
-        "Payment Failed",
-        "Your subscription payment failed. Please update your payment method."
-      );
-    }
+    // if (user.device_token) {
+    //   await this.notificationsService.sendPushNotification(
+    //     user.device_token as any,
+    //     "Payment Failed",
+    //     "Your subscription payment failed. Please update your payment method."
+    //   );
+    // }
   }
 
   /**

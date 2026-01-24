@@ -16,39 +16,44 @@ exports.RemindersScheduler = void 0;
 const common_1 = require("@nestjs/common");
 const reminders_service_1 = require("./reminders.service");
 const schedule_1 = require("@nestjs/schedule");
-const notification_service_1 = require("../notification/notification.service");
 const notification_entity_1 = require("../notifications/entities/notification.entity");
 const mongoose_1 = require("mongoose");
 const mongoose_2 = require("@nestjs/mongoose");
+const user_schema_1 = require("../users/user.schema");
 let RemindersScheduler = class RemindersScheduler {
-    constructor(notificationModel, remindersService, notificationsService) {
+    constructor(notificationModel, userModel, remindersService) {
         this.notificationModel = notificationModel;
+        this.userModel = userModel;
         this.remindersService = remindersService;
-        this.notificationsService = notificationsService;
     }
     async handleReminders() {
         while (true) {
             const r = await this.remindersService.getDueReminders();
             if (!r)
                 break;
-            const token = r.userId?.device_token;
-            if (!token) {
-                await this.remindersService.markAsSent(r._id.toString());
-                continue;
+            try {
+                const token = r.userId?.device_token;
+                if (!token) {
+                    await this.remindersService.markAsSent(r._id.toString(), false);
+                    continue;
+                }
+                await this.notificationModel.create({
+                    userId: new mongoose_1.Types.ObjectId(r.userId),
+                    title: "Event Reminder",
+                    message: `${r.type.replace("_", " ")}: ${r.eventId.title}`,
+                });
+                await this.remindersService.markAsSent(r._id.toString(), true);
             }
-            await this.notificationsService.sendPushNotification(token, 'Event Reminder', `${r.type.replace('_', ' ')}: ${r.eventId.title}`, { eventId: r.eventId._id.toString() });
-            await this.notificationModel.create({
-                userId: new mongoose_1.Types.ObjectId(r.userId),
-                title: 'Event Reminder',
-                message: `${r.type.replace('_', ' ')}: ${r.eventId.title}`,
-            });
-            await this.remindersService.markAsSent(r._id.toString());
+            catch (err) {
+                await this.remindersService.resetProcessing(r._id.toString());
+                break;
+            }
         }
     }
 };
 exports.RemindersScheduler = RemindersScheduler;
 __decorate([
-    (0, schedule_1.Cron)('* * * * *'),
+    (0, schedule_1.Cron)("* * * * *"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -56,8 +61,9 @@ __decorate([
 exports.RemindersScheduler = RemindersScheduler = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_2.InjectModel)(notification_entity_1.Notification.name)),
+    __param(1, (0, mongoose_2.InjectModel)(user_schema_1.User.name)),
     __metadata("design:paramtypes", [mongoose_1.Model,
-        reminders_service_1.RemindersService,
-        notification_service_1.NotificationsService])
+        mongoose_1.Model,
+        reminders_service_1.RemindersService])
 ], RemindersScheduler);
 //# sourceMappingURL=reminders.scheduler.js.map

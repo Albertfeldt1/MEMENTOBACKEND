@@ -7,7 +7,7 @@ import { RemindersModule } from "src/reminders/reminders.module";
 
 import { EventController } from "./event.controller";
 import { Event, EventSchema } from "./entities/event.entity";
-import { NotificationsModule } from "src/notification/notification.module";
+// import { NotificationsModule } from "src/notification/notification.module";
 import { User, UserSchema } from "src/users/user.schema";
 import { Notification, NotificationSchema } from 'src/notifications/entities/notification.entity';
 
@@ -23,7 +23,7 @@ import { Notification, NotificationSchema } from 'src/notifications/entities/not
       secret: "your-secret-key",
       signOptions: { expiresIn: "360d" },
     }),
-    NotificationsModule,
+    // NotificationsModule,
     RemindersModule,
   ],
 

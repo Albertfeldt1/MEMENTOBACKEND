@@ -20,5 +20,6 @@ export declare class RemindersService {
     } & {
         __v: number;
     }) | null>;
-    markAsSent(id: string): Promise<import("mongoose").UpdateWriteOpResult>;
+    markAsSent(id: string, sent: boolean): Promise<import("mongoose").UpdateWriteOpResult>;
+    resetProcessing(id: string): Promise<import("mongoose").UpdateWriteOpResult>;
 }

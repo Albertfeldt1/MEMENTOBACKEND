@@ -10,7 +10,6 @@ exports.RemindersModule = void 0;
 const common_1 = require("@nestjs/common");
 const reminders_service_1 = require("./reminders.service");
 const mongoose_1 = require("@nestjs/mongoose");
-const notification_module_1 = require("../notification/notification.module");
 const event_reminder_schema_1 = require("../event/entities/event-reminder.schema");
 const event_entity_1 = require("../event/entities/event.entity");
 const reminders_scheduler_1 = require("./reminders.scheduler");
@@ -28,7 +27,6 @@ exports.RemindersModule = RemindersModule = __decorate([
                 { name: user_schema_1.User.name, schema: user_schema_1.UserSchema },
                 { name: notification_entity_1.Notification.name, schema: notification_entity_1.NotificationSchema },
             ]),
-            notification_module_1.NotificationsModule
         ],
         providers: [reminders_service_1.RemindersService, reminders_scheduler_1.RemindersScheduler],
         exports: [reminders_service_1.RemindersService]

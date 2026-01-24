@@ -13,7 +13,6 @@ const stripe_controller_1 = require("./stripe.controller");
 const user_schema_1 = require("../users/user.schema");
 const mongoose_1 = require("@nestjs/mongoose");
 const jwt_1 = require("@nestjs/jwt");
-const notification_module_1 = require("../notification/notification.module");
 let StripeModule = class StripeModule {
 };
 exports.StripeModule = StripeModule;
@@ -25,7 +24,6 @@ exports.StripeModule = StripeModule = __decorate([
                 secret: 'your-secret-key',
                 signOptions: { expiresIn: '360d' },
             }),
-            notification_module_1.NotificationsModule,
         ],
         controllers: [stripe_controller_1.StripeController],
         providers: [stripe_service_1.StripeService],
