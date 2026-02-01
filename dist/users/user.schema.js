@@ -38,6 +38,10 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)({ required: false }),
     __metadata("design:type", String)
+], User.prototype, "supabaseId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: false }),
+    __metadata("design:type", String)
 ], User.prototype, "device_type", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: false }),
@@ -91,6 +95,10 @@ __decorate([
     (0, mongoose_1.Prop)({ default: null }),
     __metadata("design:type", String)
 ], User.prototype, "subscriptionStatus", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: false }),
+    __metadata("design:type", String)
+], User.prototype, "subscriptionPlan", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: true })
 ], User);

@@ -10,7 +10,9 @@ exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const passport_1 = require("@nestjs/passport");
+const mongoose_1 = require("@nestjs/mongoose");
 const jwt_strategy_1 = require("./jwt.strategy");
+const user_schema_1 = require("../users/user.schema");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -19,9 +21,10 @@ exports.AuthModule = AuthModule = __decorate([
         imports: [
             passport_1.PassportModule.register({ defaultStrategy: 'jwt' }),
             jwt_1.JwtModule.register({
-                secret: 'your-secret-key',
+                secret: process.env.SUPABASE_JWT_SECRET || 'your-secret-key',
                 signOptions: { expiresIn: '360d' },
             }),
+            mongoose_1.MongooseModule.forFeature([{ name: user_schema_1.User.name, schema: user_schema_1.UserSchema }]),
         ],
         providers: [jwt_strategy_1.JwtStrategy],
         exports: [jwt_1.JwtModule, passport_1.PassportModule],

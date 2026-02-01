@@ -8,26 +8,61 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.JwtStrategy = void 0;
 const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
 const passport_jwt_1 = require("passport-jwt");
+const mongoose_1 = require("@nestjs/mongoose");
+const mongoose_2 = require("mongoose");
+const user_schema_1 = require("../users/user.schema");
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
-    constructor() {
+    constructor(userModel) {
         super({
             jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
-            secretOrKey: 'your-secret-key',
+            secretOrKey: process.env.SUPABASE_JWT_SECRET || 'your-secret-key',
         });
+        this.userModel = userModel;
     }
     async validate(payload) {
-        return { userId: payload.sub, username: payload.username };
+        const email = payload.email;
+        const supabaseUserId = payload.sub;
+        const isSupabaseToken = payload.aud === 'authenticated';
+        if (!email) {
+            throw new common_1.UnauthorizedException('Invalid token: no email found');
+        }
+        let user = await this.userModel.findOne({
+            email: email.toLowerCase()
+        }).select('-password -__v');
+        if (!user && isSupabaseToken) {
+            user = await this.userModel.create({
+                email: email.toLowerCase(),
+                name: payload.user_metadata?.full_name || payload.user_metadata?.name || '',
+                supabaseId: supabaseUserId,
+            });
+        }
+        if (!user) {
+            throw new common_1.UnauthorizedException('User not found');
+        }
+        if (isSupabaseToken && !user.supabaseId) {
+            user.supabaseId = supabaseUserId;
+            await user.save();
+        }
+        return {
+            userId: user._id.toString(),
+            email: user.email,
+            supabaseId: supabaseUserId,
+        };
     }
 };
 exports.JwtStrategy = JwtStrategy;
 exports.JwtStrategy = JwtStrategy = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [])
+    __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
+    __metadata("design:paramtypes", [mongoose_2.Model])
 ], JwtStrategy);
 //# sourceMappingURL=jwt.strategy.js.map

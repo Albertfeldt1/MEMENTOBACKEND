@@ -4,6 +4,7 @@ export declare class User extends Document {
     email: string;
     dob: Date;
     socialId: string;
+    supabaseId?: string;
     device_type?: string;
     isSubscriptionActive?: boolean;
     device_token?: string;
@@ -18,6 +19,7 @@ export declare class User extends Document {
     startSubscriptionDate?: Date;
     endSubscriptionDate?: Date;
     subscriptionStatus?: "active" | "past_due" | "cancelled";
+    subscriptionPlan?: string;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, Document<unknown, any, User, any, {}> & User & Required<{
     _id: Types.ObjectId;

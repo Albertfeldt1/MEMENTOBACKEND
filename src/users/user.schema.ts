@@ -20,6 +20,9 @@ export class User extends Document {
   socialId: string;
 
   @Prop({ required: false })
+  supabaseId?: string;
+
+  @Prop({ required: false })
   device_type?: string;
 
   @Prop({ default: false })
@@ -60,6 +63,9 @@ export class User extends Document {
 
   @Prop({ default: null })
   subscriptionStatus?: "active" | "past_due" | "cancelled";
+
+  @Prop({ required: false })
+  subscriptionPlan?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
